@@ -1,4 +1,4 @@
-using AspNetCoreCourseProject.Data;
+using Data.Database;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

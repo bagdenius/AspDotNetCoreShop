@@ -1,7 +1,7 @@
-﻿using AspNetCoreCourseProject.Models;
+﻿using Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AspNetCoreCourseProject.Data
+namespace Data.Database
 {
     public class ApplicationDbContext : DbContext
     {

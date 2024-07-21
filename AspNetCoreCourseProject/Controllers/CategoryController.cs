@@ -1,5 +1,5 @@
-﻿using AspNetCoreCourseProject.Data;
-using AspNetCoreCourseProject.Models;
+﻿using Data.Database;
+using Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

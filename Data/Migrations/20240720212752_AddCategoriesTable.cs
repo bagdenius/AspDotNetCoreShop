@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AspNetCoreCourseProject.Migrations
+namespace Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoriesTable : Migration
