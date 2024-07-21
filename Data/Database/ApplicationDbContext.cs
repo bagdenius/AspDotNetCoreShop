@@ -1,5 +1,5 @@
-﻿using Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace Data.Database
 {

@@ -1,21 +1,21 @@
 ﻿using Data.Database;
-using Models;
+using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Models;
 
-namespace AspNetCoreCourseProject.Controllers
+namespace MVCProject.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly ICategoryRepository _repository;
+        public CategoryController(ICategoryRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _db.Categories.ToList();
+            IEnumerable<Category> categories = _repository.GetAll();
 
             return View(categories);
         }
@@ -30,21 +30,21 @@ namespace AspNetCoreCourseProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(category);
-                _db.SaveChanges();
+                _repository.Add(category);
+                _repository.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
             return View();
         }
 
-        public IActionResult Edit(Guid? id)
+        public IActionResult Edit(Guid id)
         {
-            if (id is null || id == Guid.Empty || !ModelState.IsValid)
+            if (id == Guid.Empty || !ModelState.IsValid)
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _repository.Get(id);
             if (category is null)
             {
                 return NotFound();
@@ -57,21 +57,21 @@ namespace AspNetCoreCourseProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(category);
-                _db.SaveChanges();
+                _repository.Update(category);
+                _repository.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
             return View();
         }
 
-        public IActionResult Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
-            if (id is null || id == Guid.Empty || !ModelState.IsValid)
+            if (id == Guid.Empty || !ModelState.IsValid)
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _repository.Get(id);
             if (category is null)
             {
                 return NotFound();
@@ -80,15 +80,15 @@ namespace AspNetCoreCourseProject.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(Guid? id)
+        public IActionResult DeletePOST(Guid id)
         {
-            Category? category = _db.Categories.Find(id);
+            Category? category = _repository.Get(id);
             if (category is null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(category);
-            _db.SaveChanges();
+            _repository.Remove(category);
+            _repository.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
