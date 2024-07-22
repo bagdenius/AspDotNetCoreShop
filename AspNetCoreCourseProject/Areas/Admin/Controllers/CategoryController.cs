@@ -1,22 +1,21 @@
-﻿using Data.Database;
-using Data.Repository.Abstract;
+﻿using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
-namespace MVCProject.Controllers
+namespace MVCProject.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _repository;
-        public CategoryController(ICategoryRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _repository.GetAll();
-
+            IEnumerable<Category> categories = _unitOfWork.Category.GetAll();
             return View(categories);
         }
 
@@ -30,8 +29,8 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(category);
-                _repository.Save();
+                _unitOfWork.Category.Add(category);
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -44,7 +43,7 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
-            Category? category = _repository.Get(id);
+            Category category = _unitOfWork.Category.Get(id);
             if (category is null)
             {
                 return NotFound();
@@ -57,8 +56,8 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Update(category);
-                _repository.Save();
+                _unitOfWork.Category.Update(category);
+                _unitOfWork.Category.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
@@ -71,7 +70,7 @@ namespace MVCProject.Controllers
             {
                 return NotFound();
             }
-            Category? category = _repository.Get(id);
+            Category? category = _unitOfWork.Category.Get(id);
             if (category is null)
             {
                 return NotFound();
@@ -82,13 +81,13 @@ namespace MVCProject.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(Guid id)
         {
-            Category? category = _repository.Get(id);
-            if (category is null)
+            Category category = _unitOfWork.Category.Get(id);
+            if (category is null || !ModelState.IsValid)
             {
                 return NotFound();
             }
-            _repository.Remove(category);
-            _repository.Save();
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
