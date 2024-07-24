@@ -1,6 +1,9 @@
-﻿using Data.Repository.Abstract;
+﻿using Data.Repository;
+using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
+using Models.ViewModels;
 
 namespace MVCProject.Areas.Admin.Controllers
 {
@@ -8,88 +11,113 @@ namespace MVCProject.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork,
+            IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _unitOfWork.Product.GetAll();
+            IEnumerable<Product> products = _unitOfWork.Product
+                .GetAll(includeProperties: "Category");
             return View(products);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(Guid? id)
         {
-            return View();
+            ProductVM productVM = new()
+            {
+                Product = new Product(),
+                CategoryList = _unitOfWork.Category.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })
+            };
+            if (id != null && id != Guid.Empty)
+            {
+                productVM.Product = _unitOfWork.Product.Get((Guid)id);
+            }
+            return View(productVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(product);
+                if (file != null)
+                {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        string oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(productPath, filename), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    productVM.Product.ImageUrl = @"\images\product\" + filename;
+                }
+                if (productVM.Product.Id == Guid.Empty)
+                {
+                    _unitOfWork.Product.Add(productVM.Product);
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(productVM.Product);
+                }
                 _unitOfWork.Save();
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
-            return View();
+            productVM.CategoryList = _unitOfWork.Category.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                });
+            return View(productVM);
         }
 
-        public IActionResult Edit(Guid id)
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll(int id)
         {
-            if (id == Guid.Empty || !ModelState.IsValid)
-            {
-                return NotFound();
-            }
-            Product product = _unitOfWork.Product.Get(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
+            IEnumerable<Product> products = _unitOfWork.Product
+        .GetAll(includeProperties: "Category");
+            return Json(new { data = products });
         }
 
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Product.Update(product);
-                _unitOfWork.Save();
-                TempData["success"] = "Product updated successfully";
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
-
+        [HttpDelete]
         public IActionResult Delete(Guid id)
         {
-            if (id == Guid.Empty || !ModelState.IsValid)
-            {
-                return NotFound();
-            }
             Product product = _unitOfWork.Product.Get(id);
             if (product == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
-            return View(product);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(Guid id)
-        {
-            Product product = _unitOfWork.Product.Get(id);
-            if(product is null || !ModelState.IsValid)
+            string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
             {
-                return NotFound();
+                System.IO.File.Delete(oldImagePath);
             }
             _unitOfWork.Product.Remove(product);
             _unitOfWork.Save();
-            TempData["success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Delete successful" });
         }
+
+        #endregion
     }
 }

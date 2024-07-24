@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240722223523_AddCategoryAndProductSeed")]
-    partial class AddCategoryAndProductSeed
+    [Migration("20240722235712_AddCategoryAndProductTablesAndSeed")]
+    partial class AddCategoryAndProductTablesAndSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,9 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -106,6 +109,8 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
 
                     b.HasData(
@@ -113,6 +118,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("b7e9b11f-f628-432c-9a31-6dc128ce5de3"),
                             Author = "Billy Spark",
+                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SWD9999001",
                             ListPrice = 99.0,
@@ -125,6 +131,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("21626bfb-96f2-4dbb-84b1-d9bf7b8b8d95"),
                             Author = "Nancy Hoover",
+                            CategoryId = new Guid("950c60da-0ebd-4343-887b-b4dd178f6a29"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "CAW777777701",
                             ListPrice = 40.0,
@@ -137,6 +144,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("0fcbc886-dd0e-49fb-9fd9-cd5c647a9d98"),
                             Author = "Julian Button",
+                            CategoryId = new Guid("d9e57bb3-8446-4e7d-9243-6b3b52010680"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "RITO5555501",
                             ListPrice = 55.0,
@@ -149,6 +157,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("2bd0613e-1e6f-411f-8243-a0c490d6743e"),
                             Author = "Abby Muscles",
+                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "WS3333333301",
                             ListPrice = 70.0,
@@ -161,6 +170,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("49758f0d-774a-481f-8647-48a2845b4ebe"),
                             Author = "Ron Parker",
+                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SOTJ1111111101",
                             ListPrice = 30.0,
@@ -173,6 +183,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("0767fb28-f5af-4a42-84e7-3c1d503efd80"),
                             Author = "Laura Phantom",
+                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "FOT000000001",
                             ListPrice = 25.0,
@@ -181,6 +192,17 @@ namespace Data.Migrations
                             Price50 = 22.0,
                             Title = "Leaves and Wonders"
                         });
+                });
+
+            modelBuilder.Entity("Models.Product", b =>
+                {
+                    b.HasOne("Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

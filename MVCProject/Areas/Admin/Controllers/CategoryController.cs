@@ -44,7 +44,7 @@ namespace MVCProject.Areas.Admin.Controllers
                 return NotFound();
             }
             Category category = _unitOfWork.Category.Get(id);
-            if (category is null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -71,7 +71,7 @@ namespace MVCProject.Areas.Admin.Controllers
                 return NotFound();
             }
             Category? category = _unitOfWork.Category.Get(id);
-            if (category is null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -82,7 +82,7 @@ namespace MVCProject.Areas.Admin.Controllers
         public IActionResult DeletePOST(Guid id)
         {
             Category category = _unitOfWork.Category.Get(id);
-            if (category is null || !ModelState.IsValid)
+            if (category == null || !ModelState.IsValid)
             {
                 return NotFound();
             }

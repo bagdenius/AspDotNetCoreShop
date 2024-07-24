@@ -14,7 +14,23 @@ namespace Data.Repository
 
         public new void Update(Product product)
         {
-            _db.Products.Update(product);
+            Product updatedProduct = Get(product.Id);
+            if (updatedProduct != null)
+            {
+                updatedProduct.Title = product.Title;
+                updatedProduct.Author = product.Author;
+                updatedProduct.ISBN = product.ISBN;
+                updatedProduct.Description = product.Description;
+                updatedProduct.ListPrice = product.ListPrice;
+                updatedProduct.Price = product.Price;
+                updatedProduct.Price50 = product.Price50;
+                updatedProduct.Price100 = product.Price100;
+                updatedProduct.CategoryId = product.CategoryId;
+                if (product.ImageUrl != null)
+                {
+                    updatedProduct.ImageUrl = product.ImageUrl;
+                }
+            }
         }
     }
 }

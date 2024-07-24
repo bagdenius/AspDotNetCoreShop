@@ -1,6 +1,7 @@
 ﻿using Data.Database;
 using Data.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data.Repository
 {
@@ -19,28 +20,49 @@ namespace Data.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Guid id)
+        public T Get(Guid id, string? includeProperties = null)
         {
-            return dbSet.Find(id);
+            if (string.IsNullOrEmpty(includeProperties))
+            {
+                return dbSet.Find(id);
+            }
+
+            IQueryable<T> query = dbSet;
+            foreach (var property in includeProperties
+                .Split(',', StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(property);
+            }
+            return query.FirstOrDefault();
         }
 
-        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter)
+        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
             return query.FirstOrDefault();
-
-            // my implementation:
-            // return dbSet.FirstOrDefault(filter);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
             return query.ToList();
-
-            // my implementation:
-            // return dbSet;
         }
 
         public void Remove(T entity)

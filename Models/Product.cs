@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
@@ -18,7 +20,6 @@ namespace Models
 
         public string Description { get; set; }
 
-
         [Required, Display(Name = "List Price"), Range(1, 1000)]
         public double ListPrice { get; set; }
 
@@ -33,5 +34,14 @@ namespace Models
 
         [Required, Display(Name = "Price for 100+"), Range(1, 1000)]
         public double Price100 { get; set; }
+
+        [Display(Name = "Category")]
+        public Guid CategoryId { get; set; }
+
+        [ValidateNever, ForeignKey(nameof(CategoryId))]
+        public Category Category { get; set; }
+
+        [ValidateNever, Display(Name = "Image")]
+        public string ImageUrl { get; set; }
     }
 }
