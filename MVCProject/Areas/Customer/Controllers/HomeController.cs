@@ -1,3 +1,4 @@
+using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Diagnostics;
@@ -7,16 +8,25 @@ namespace MVCProject.Areas.Customer.Controllers
     [Area("Customer")]
     public class HomeController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            return View(products);
+        }
+
+        public IActionResult Details(Guid id)
+        {
+            Product product = _unitOfWork.Product.Get(id, "Category");
+            return View(product);
         }
 
         public IActionResult Privacy()
