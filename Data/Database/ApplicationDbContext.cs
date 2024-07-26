@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace Data.Database
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,6 +20,8 @@ namespace Data.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category
                 {
@@ -56,7 +60,7 @@ namespace Data.Database
                     Price50 = 85,
                     Price100 = 80,
                     CategoryId = Guid.Parse("f477d305-d208-425c-a998-2039921bb8de"),
-                    ImageUrl=""
+                    ImageUrl = ""
                 },
                 new Product
                 {
