@@ -1,7 +1,6 @@
 ﻿using Data.Database;
 using Data.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data.Repository
 {

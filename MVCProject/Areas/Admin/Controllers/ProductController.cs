@@ -1,13 +1,15 @@
-﻿using Data.Repository;
-using Data.Repository.Abstract;
+﻿using Data.Repository.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Models.ViewModels;
+using Utility;
 
 namespace MVCProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
