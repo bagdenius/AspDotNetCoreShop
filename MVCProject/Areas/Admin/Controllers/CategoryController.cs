@@ -42,16 +42,12 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Edit(Guid id)
         {
-            if (id == Guid.Empty || !ModelState.IsValid)
+            if (ModelState.IsValid && id != Guid.Empty)
             {
-                return NotFound();
+                Category category = _unitOfWork.Category.Get(id);
+                return View(category);
             }
-            Category category = _unitOfWork.Category.Get(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
+            return NotFound();
         }
 
         [HttpPost]
@@ -69,30 +65,26 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            if (id == Guid.Empty || !ModelState.IsValid)
+            if (ModelState.IsValid && id != Guid.Empty)
             {
-                return NotFound();
+                Category category = _unitOfWork.Category.Get(id);
+                return View(category);
             }
-            Category? category = _unitOfWork.Category.Get(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
+            return NotFound();
         }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(Guid id)
         {
-            Category category = _unitOfWork.Category.Get(id);
-            if (category == null || !ModelState.IsValid)
+            if (ModelState.IsValid && id != Guid.Empty)
             {
-                return NotFound();
+                Category category = _unitOfWork.Category.Get(id);
+                _unitOfWork.Category.Remove(category);
+                _unitOfWork.Save();
+                TempData["success"] = "Category deleted successfully";
+                return RedirectToAction("Index");
             }
-            _unitOfWork.Category.Remove(category);
-            _unitOfWork.Save();
-            TempData["success"] = "Category deleted successfully";
-            return RedirectToAction("Index");
+            return NotFound();
         }
     }
 }

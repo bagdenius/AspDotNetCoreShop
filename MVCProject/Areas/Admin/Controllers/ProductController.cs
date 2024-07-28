@@ -30,21 +30,25 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Upsert(Guid? id)
         {
-            ProductVM productVM = new()
+            if (ModelState.IsValid)
             {
-                Product = new Product(),
-                CategoryList = _unitOfWork.Category.GetAll()
+                ProductVM productVM = new()
+                {
+                    Product = new Product(),
+                    CategoryList = _unitOfWork.Category.GetAll()
                 .Select(c => new SelectListItem
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
                 })
-            };
-            if (id != null && id != Guid.Empty)
-            {
-                productVM.Product = _unitOfWork.Product.Get((Guid)id);
+                };
+                if (id != null && id != Guid.Empty)
+                {
+                    productVM.Product = _unitOfWork.Product.Get((Guid)id);
+                }
+                return View(productVM);
             }
-            return View(productVM);
+            return NotFound();
         }
 
         [HttpPost]
@@ -97,27 +101,35 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll(int id)
         {
-            IEnumerable<Product> products = _unitOfWork.Product
-        .GetAll(includeProperties: "Category");
-            return Json(new { data = products });
+            if (ModelState.IsValid)
+            {
+                IEnumerable<Product> products = _unitOfWork.Product
+                    .GetAll(includeProperties: "Category");
+                return Json(new { data = products });
+            }
+            return NotFound();
         }
 
         [HttpDelete]
         public IActionResult Delete(Guid id)
         {
-            Product product = _unitOfWork.Product.Get(id);
-            if (product == null)
+            if (ModelState.IsValid)
             {
-                return Json(new { success = false, message = "Error while deleting" });
+                Product product = _unitOfWork.Product.Get(id);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "Error while deleting" });
+                }
+                string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                _unitOfWork.Product.Remove(product);
+                _unitOfWork.Save();
+                return Json(new { success = true, message = "Delete successful" });
             }
-            string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
-            if (System.IO.File.Exists(oldImagePath))
-            {
-                System.IO.File.Delete(oldImagePath);
-            }
-            _unitOfWork.Product.Remove(product);
-            _unitOfWork.Save();
-            return Json(new { success = true, message = "Delete successful" });
+            return NotFound();
         }
 
         #endregion

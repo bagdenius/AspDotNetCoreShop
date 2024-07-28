@@ -17,6 +17,7 @@ namespace Data.Database
         new public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,6 +49,7 @@ namespace Data.Database
                     Name = "Horror",
                     DisplayOrder = 4
                 });
+
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {
@@ -132,6 +134,63 @@ namespace Data.Database
                     Price100 = 20,
                     CategoryId = Guid.Parse("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
                     ImageUrl = ""
+                });
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = Guid.Parse("df4bbe9f-b303-4c04-86cb-128c7f0b4ac9"),
+                    Name = "Masonic Int",
+                    PhoneNumber = "+1(406)-564-6357",
+                    Country = "United States",
+                    State = "Iowa",
+                    City = "Allerton",
+                    Address = "17 Masonic Drive",
+                    PostalCode = "50008"
+                },
+                new Company
+                {
+                    Id = Guid.Parse("8c31a04a-ded0-47bd-9005-eb62cbc7a22f"),
+                    Name = "Neuport Lane Tech",
+                    PhoneNumber = "+1(770)-312-8562",
+                    Country = "United States",
+                    State = "Georgia",
+                    City = "Duluth",
+                    Address = "3332 Neuport Lane",
+                    PostalCode = "30097"
+                },
+                new Company
+                {
+                    Id = Guid.Parse("e2f94a3f-11dc-4bfd-ae1b-cfc7672706b6"),
+                    Name = "Roy Alley Co.",
+                    PhoneNumber = "+1(303)-865-1479",
+                    Country = "United States",
+                    State = "Colorado",
+                    City = "Greenwood Village",
+                    Address = "4279 Roy Alley",
+                    PostalCode = "80111"
+                },
+                new Company
+                {
+                    Id = Guid.Parse("a5cdcf9c-a679-4498-905b-3104538ede0c"),
+                    Name = "Hall Place GmBH",
+                    PhoneNumber = "+1(903)-674-5068",
+                    Country = "United States",
+                    State = "Texas",
+                    City = "Detroit",
+                    Address = "3961 Hall Place",
+                    PostalCode = "75436"
+                },
+                new Company
+                {
+                    Id = Guid.Parse("0a43b720-b7b4-4e56-9f20-0968c1f1e73c"),
+                    Name = "DyeS Chandler Co.",
+                    PhoneNumber = "+1(480)-782-1697",
+                    Country = "United States",
+                    State = "Arizona",
+                    City = "Chandler",
+                    Address = "3173 Dye Street",
+                    PostalCode = "85225"
                 });
         }
     }

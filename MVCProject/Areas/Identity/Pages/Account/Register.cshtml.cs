@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -27,6 +28,7 @@ namespace MVCProject.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -34,7 +36,8 @@ namespace MVCProject.Areas.Identity.Pages.Account
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -43,6 +46,7 @@ namespace MVCProject.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -106,6 +110,12 @@ namespace MVCProject.Areas.Identity.Pages.Account
             [DataType(DataType.PhoneNumber), Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
 
+            [Display(Name = "Company")]
+            public Guid? CompanyId { get; set; }
+
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
+
             [Display(Name = "Role")]
             public string Role { get; set; }
 
@@ -132,6 +142,12 @@ namespace MVCProject.Areas.Identity.Pages.Account
                 {
                     Text = n,
                     Value = n
+                }),
+                CompanyList = _unitOfWork.Company.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
                 })
             };
 
@@ -158,6 +174,10 @@ namespace MVCProject.Areas.Identity.Pages.Account
                 user.Address = Input.Address;
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyId = Input.CompanyId;
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

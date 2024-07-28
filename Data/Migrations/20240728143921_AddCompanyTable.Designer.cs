@@ -4,6 +4,7 @@ using Data.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240728143921_AddCompanyTable")]
+    partial class AddCompanyTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,63 +314,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("df4bbe9f-b303-4c04-86cb-128c7f0b4ac9"),
-                            Address = "17 Masonic Drive",
-                            City = "Allerton",
-                            Country = "United States",
-                            Name = "Masonic Int",
-                            PhoneNumber = "+1(406)-564-6357",
-                            PostalCode = "50008",
-                            State = "Iowa"
-                        },
-                        new
-                        {
-                            Id = new Guid("8c31a04a-ded0-47bd-9005-eb62cbc7a22f"),
-                            Address = "3332 Neuport Lane",
-                            City = "Duluth",
-                            Country = "United States",
-                            Name = "Neuport Lane Tech",
-                            PhoneNumber = "+1(770)-312-8562",
-                            PostalCode = "30097",
-                            State = "Georgia"
-                        },
-                        new
-                        {
-                            Id = new Guid("e2f94a3f-11dc-4bfd-ae1b-cfc7672706b6"),
-                            Address = "4279 Roy Alley",
-                            City = "Greenwood Village",
-                            Country = "United States",
-                            Name = "Roy Alley Co.",
-                            PhoneNumber = "+1(303)-865-1479",
-                            PostalCode = "80111",
-                            State = "Colorado"
-                        },
-                        new
-                        {
-                            Id = new Guid("a5cdcf9c-a679-4498-905b-3104538ede0c"),
-                            Address = "3961 Hall Place",
-                            City = "Detroit",
-                            Country = "United States",
-                            Name = "Hall Place GmBH",
-                            PhoneNumber = "+1(903)-674-5068",
-                            PostalCode = "75436",
-                            State = "Texas"
-                        },
-                        new
-                        {
-                            Id = new Guid("0a43b720-b7b4-4e56-9f20-0968c1f1e73c"),
-                            Address = "3173 Dye Street",
-                            City = "Chandler",
-                            Country = "United States",
-                            Name = "DyeS Chandler Co.",
-                            PhoneNumber = "+1(480)-782-1697",
-                            PostalCode = "85225",
-                            State = "Arizona"
-                        });
                 });
 
             modelBuilder.Entity("Models.Product", b =>
@@ -516,9 +462,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -538,8 +481,6 @@ namespace Data.Migrations
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -604,15 +545,6 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Models.User", b =>
-                {
-                    b.HasOne("Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
