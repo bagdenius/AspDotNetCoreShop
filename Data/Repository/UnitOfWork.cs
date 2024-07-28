@@ -9,19 +9,19 @@ namespace Data.Repository
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; private set; }
         public ICompanyRepository Company { get; private set; }
+        public IShoppingCartRepository ShoppingCart { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db,
             ICategoryRepository categoryRepository,
             IProductRepository productRepository,
-            ICompanyRepository companyRepository)
+            ICompanyRepository companyRepository,
+            IShoppingCartRepository shoppingCart)
         {
             _db = db;
-            //Category = new CategoryRepository(_db);
-            //Product = new ProductRepository(_db);
-            //Company = new CompanyRepository(_db);
             Category = categoryRepository;
             Product = productRepository;
             Company = companyRepository;
+            ShoppingCart = shoppingCart;
         }
 
         public void Save()
