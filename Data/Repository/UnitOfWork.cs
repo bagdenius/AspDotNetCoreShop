@@ -10,18 +10,21 @@ namespace Data.Repository
         public IProductRepository Product { get; private set; }
         public ICompanyRepository Company { get; private set; }
         public IShoppingCartRepository ShoppingCart { get; private set; }
+        public IUserRepository User { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db,
             ICategoryRepository categoryRepository,
             IProductRepository productRepository,
             ICompanyRepository companyRepository,
-            IShoppingCartRepository shoppingCart)
+            IShoppingCartRepository shoppingCart,
+            IUserRepository user)
         {
             _db = db;
             Category = categoryRepository;
             Product = productRepository;
             Company = companyRepository;
             ShoppingCart = shoppingCart;
+            User = user;
         }
 
         public void Save()

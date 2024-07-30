@@ -75,12 +75,12 @@ namespace MVCProject.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required, Display(Name = "Username")]
-            public string? UserName { get; set; }
+            public string UserName { get; set; }
 
             [Required, EmailAddress, DataType(DataType.EmailAddress), Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required, DataType(DataType.Password), Display(Name = "Password"), StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required, DataType(DataType.Password), Display(Name = "Password"), StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
             public string Password { get; set; }
 
             [DataType(DataType.Password), Display(Name = "Confirm Password"), Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
@@ -111,7 +111,7 @@ namespace MVCProject.Areas.Identity.Pages.Account
             public string PhoneNumber { get; set; }
 
             [Display(Name = "Company")]
-            public Guid? CompanyId { get; set; }
+            public string? CompanyId { get; set; }
 
             [ValidateNever]
             public IEnumerable<SelectListItem> CompanyList { get; set; }
@@ -163,7 +163,7 @@ namespace MVCProject.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.UserName = Input.UserName;
                 user.Name = Input.Name;

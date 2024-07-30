@@ -4,7 +4,7 @@
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">@(Model.Product.Id != Guid.Empty ? "Edit" : "Create") Product</h2>
+                <h2 class="text-white py-2">@(Model.Product.Id == Guid.Empty.ToString() ? "Create" : "Edit") Product</h2>
             </div>
         </div>
     </div>
@@ -68,13 +68,13 @@
                         </div>
                         <div class="row pt-2">
                             <div class="col-6 col-md-3">
-                                @if (Model.Product.Id != Guid.Empty)
+                                @if (Model.Product.Id == Guid.Empty.ToString())
                                 {
-                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
                                 }
                                 else
                                 {
-                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
                                 }
                             </div>
                             <div class="col-6 col-md-3">

@@ -28,7 +28,7 @@ namespace MVCProject.Areas.Admin.Controllers
             return View(products);
         }
 
-        public IActionResult Upsert(Guid? id)
+        public IActionResult Upsert(string? id)
         {
             if (ModelState.IsValid)
             {
@@ -36,15 +36,15 @@ namespace MVCProject.Areas.Admin.Controllers
                 {
                     Product = new Product(),
                     CategoryList = _unitOfWork.Category.GetAll()
-                .Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                })
+                        .Select(c => new SelectListItem
+                        {
+                            Text = c.Name,
+                            Value = c.Id.ToString()
+                        })
                 };
-                if (id != null && id != Guid.Empty)
+                if (id != null)
                 {
-                    productVM.Product = _unitOfWork.Product.Get((Guid)id);
+                    productVM.Product = _unitOfWork.Product.Get(id);
                 }
                 return View(productVM);
             }
@@ -75,16 +75,18 @@ namespace MVCProject.Areas.Admin.Controllers
                     }
                     productVM.Product.ImageUrl = @"\images\product\" + filename;
                 }
-                if (productVM.Product.Id == Guid.Empty)
+                if (productVM.Product.Id == Guid.Empty.ToString())
                 {
+                    productVM.Product.Id = Guid.NewGuid().ToString();
                     _unitOfWork.Product.Add(productVM.Product);
+                    TempData["success"] = "Product created successfully";
                 }
                 else
                 {
                     _unitOfWork.Product.Update(productVM.Product);
+                    TempData["success"] = "Product updated successfully";
                 }
                 _unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
             productVM.CategoryList = _unitOfWork.Category.GetAll()
@@ -99,7 +101,7 @@ namespace MVCProject.Areas.Admin.Controllers
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll(int id)
+        public IActionResult GetAll()
         {
             if (ModelState.IsValid)
             {
@@ -111,9 +113,9 @@ namespace MVCProject.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
                 Product product = _unitOfWork.Product.Get(id);
                 if (product == null)

@@ -7,7 +7,7 @@ namespace Models
     public class Product
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; } = Guid.Empty.ToString();
 
         [Required]
         public string Title { get; set; }
@@ -36,7 +36,7 @@ namespace Models
         public double Price100 { get; set; }
 
         [Display(Name = "Category")]
-        public Guid CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
         [ValidateNever, ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }

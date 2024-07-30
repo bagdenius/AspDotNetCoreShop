@@ -231,9 +231,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.Category", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -250,25 +249,25 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            Id = "f477d305-d208-425c-a998-2039921bb8de",
                             DisplayOrder = 1,
                             Name = "Action"
                         },
                         new
                         {
-                            Id = new Guid("950c60da-0ebd-4343-887b-b4dd178f6a29"),
+                            Id = "950c60da-0ebd-4343-887b-b4dd178f6a29",
                             DisplayOrder = 2,
                             Name = "Sci-Fi"
                         },
                         new
                         {
-                            Id = new Guid("d9e57bb3-8446-4e7d-9243-6b3b52010680"),
+                            Id = "d9e57bb3-8446-4e7d-9243-6b3b52010680",
                             DisplayOrder = 3,
                             Name = "History"
                         },
                         new
                         {
-                            Id = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            Id = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             DisplayOrder = 4,
                             Name = "Horror"
                         });
@@ -276,9 +275,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.Company", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -315,7 +313,7 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("df4bbe9f-b303-4c04-86cb-128c7f0b4ac9"),
+                            Id = "df4bbe9f-b303-4c04-86cb-128c7f0b4ac9",
                             Address = "17 Masonic Drive",
                             City = "Allerton",
                             Country = "United States",
@@ -326,7 +324,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8c31a04a-ded0-47bd-9005-eb62cbc7a22f"),
+                            Id = "8c31a04a-ded0-47bd-9005-eb62cbc7a22f",
                             Address = "3332 Neuport Lane",
                             City = "Duluth",
                             Country = "United States",
@@ -337,7 +335,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e2f94a3f-11dc-4bfd-ae1b-cfc7672706b6"),
+                            Id = "e2f94a3f-11dc-4bfd-ae1b-cfc7672706b6",
                             Address = "4279 Roy Alley",
                             City = "Greenwood Village",
                             Country = "United States",
@@ -348,7 +346,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a5cdcf9c-a679-4498-905b-3104538ede0c"),
+                            Id = "a5cdcf9c-a679-4498-905b-3104538ede0c",
                             Address = "3961 Hall Place",
                             City = "Detroit",
                             Country = "United States",
@@ -359,7 +357,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0a43b720-b7b4-4e56-9f20-0968c1f1e73c"),
+                            Id = "0a43b720-b7b4-4e56-9f20-0968c1f1e73c",
                             Address = "3173 Dye Street",
                             City = "Chandler",
                             Country = "United States",
@@ -372,16 +370,16 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.Product", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -420,9 +418,9 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b7e9b11f-f628-432c-9a31-6dc128ce5de3"),
+                            Id = "b7e9b11f-f628-432c-9a31-6dc128ce5de3",
                             Author = "Billy Spark",
-                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            CategoryId = "f477d305-d208-425c-a998-2039921bb8de",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SWD9999001",
                             ImageUrl = "",
@@ -434,9 +432,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("21626bfb-96f2-4dbb-84b1-d9bf7b8b8d95"),
+                            Id = "21626bfb-96f2-4dbb-84b1-d9bf7b8b8d95",
                             Author = "Nancy Hoover",
-                            CategoryId = new Guid("950c60da-0ebd-4343-887b-b4dd178f6a29"),
+                            CategoryId = "950c60da-0ebd-4343-887b-b4dd178f6a29",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "CAW777777701",
                             ImageUrl = "",
@@ -448,9 +446,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0fcbc886-dd0e-49fb-9fd9-cd5c647a9d98"),
+                            Id = "0fcbc886-dd0e-49fb-9fd9-cd5c647a9d98",
                             Author = "Julian Button",
-                            CategoryId = new Guid("d9e57bb3-8446-4e7d-9243-6b3b52010680"),
+                            CategoryId = "d9e57bb3-8446-4e7d-9243-6b3b52010680",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "RITO5555501",
                             ImageUrl = "",
@@ -462,9 +460,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2bd0613e-1e6f-411f-8243-a0c490d6743e"),
+                            Id = "2bd0613e-1e6f-411f-8243-a0c490d6743e",
                             Author = "Abby Muscles",
-                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            CategoryId = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "WS3333333301",
                             ImageUrl = "",
@@ -476,9 +474,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("49758f0d-774a-481f-8647-48a2845b4ebe"),
+                            Id = "49758f0d-774a-481f-8647-48a2845b4ebe",
                             Author = "Ron Parker",
-                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            CategoryId = "f477d305-d208-425c-a998-2039921bb8de",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SOTJ1111111101",
                             ImageUrl = "",
@@ -490,9 +488,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0767fb28-f5af-4a42-84e7-3c1d503efd80"),
+                            Id = "0767fb28-f5af-4a42-84e7-3c1d503efd80",
                             Author = "Laura Phantom",
-                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            CategoryId = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "FOT000000001",
                             ImageUrl = "",
@@ -506,15 +504,15 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.ShoppingCart", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -541,8 +539,8 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CompanyId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
                         .IsRequired()

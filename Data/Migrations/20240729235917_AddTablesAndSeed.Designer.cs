@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240726204335_ExtendIdentityUser")]
-    partial class ExtendIdentityUser
+    [Migration("20240729235917_AddTablesAndSeed")]
+    partial class AddTablesAndSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,12 +179,10 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -221,12 +219,10 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -238,9 +234,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.Category", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -257,42 +252,137 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            Id = "f477d305-d208-425c-a998-2039921bb8de",
                             DisplayOrder = 1,
                             Name = "Action"
                         },
                         new
                         {
-                            Id = new Guid("950c60da-0ebd-4343-887b-b4dd178f6a29"),
+                            Id = "950c60da-0ebd-4343-887b-b4dd178f6a29",
                             DisplayOrder = 2,
                             Name = "Sci-Fi"
                         },
                         new
                         {
-                            Id = new Guid("d9e57bb3-8446-4e7d-9243-6b3b52010680"),
+                            Id = "d9e57bb3-8446-4e7d-9243-6b3b52010680",
                             DisplayOrder = 3,
                             Name = "History"
                         },
                         new
                         {
-                            Id = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            Id = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             DisplayOrder = 4,
                             Name = "Horror"
                         });
                 });
 
+            modelBuilder.Entity("Models.Company", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "df4bbe9f-b303-4c04-86cb-128c7f0b4ac9",
+                            Address = "17 Masonic Drive",
+                            City = "Allerton",
+                            Country = "United States",
+                            Name = "Masonic Int",
+                            PhoneNumber = "+1(406)-564-6357",
+                            PostalCode = "50008",
+                            State = "Iowa"
+                        },
+                        new
+                        {
+                            Id = "8c31a04a-ded0-47bd-9005-eb62cbc7a22f",
+                            Address = "3332 Neuport Lane",
+                            City = "Duluth",
+                            Country = "United States",
+                            Name = "Neuport Lane Tech",
+                            PhoneNumber = "+1(770)-312-8562",
+                            PostalCode = "30097",
+                            State = "Georgia"
+                        },
+                        new
+                        {
+                            Id = "e2f94a3f-11dc-4bfd-ae1b-cfc7672706b6",
+                            Address = "4279 Roy Alley",
+                            City = "Greenwood Village",
+                            Country = "United States",
+                            Name = "Roy Alley Co.",
+                            PhoneNumber = "+1(303)-865-1479",
+                            PostalCode = "80111",
+                            State = "Colorado"
+                        },
+                        new
+                        {
+                            Id = "a5cdcf9c-a679-4498-905b-3104538ede0c",
+                            Address = "3961 Hall Place",
+                            City = "Detroit",
+                            Country = "United States",
+                            Name = "Hall Place GmBH",
+                            PhoneNumber = "+1(903)-674-5068",
+                            PostalCode = "75436",
+                            State = "Texas"
+                        },
+                        new
+                        {
+                            Id = "0a43b720-b7b4-4e56-9f20-0968c1f1e73c",
+                            Address = "3173 Dye Street",
+                            City = "Chandler",
+                            Country = "United States",
+                            Name = "DyeS Chandler Co.",
+                            PhoneNumber = "+1(480)-782-1697",
+                            PostalCode = "85225",
+                            State = "Arizona"
+                        });
+                });
+
             modelBuilder.Entity("Models.Product", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -331,9 +421,9 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b7e9b11f-f628-432c-9a31-6dc128ce5de3"),
+                            Id = "b7e9b11f-f628-432c-9a31-6dc128ce5de3",
                             Author = "Billy Spark",
-                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            CategoryId = "f477d305-d208-425c-a998-2039921bb8de",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SWD9999001",
                             ImageUrl = "",
@@ -345,9 +435,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("21626bfb-96f2-4dbb-84b1-d9bf7b8b8d95"),
+                            Id = "21626bfb-96f2-4dbb-84b1-d9bf7b8b8d95",
                             Author = "Nancy Hoover",
-                            CategoryId = new Guid("950c60da-0ebd-4343-887b-b4dd178f6a29"),
+                            CategoryId = "950c60da-0ebd-4343-887b-b4dd178f6a29",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "CAW777777701",
                             ImageUrl = "",
@@ -359,9 +449,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0fcbc886-dd0e-49fb-9fd9-cd5c647a9d98"),
+                            Id = "0fcbc886-dd0e-49fb-9fd9-cd5c647a9d98",
                             Author = "Julian Button",
-                            CategoryId = new Guid("d9e57bb3-8446-4e7d-9243-6b3b52010680"),
+                            CategoryId = "d9e57bb3-8446-4e7d-9243-6b3b52010680",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "RITO5555501",
                             ImageUrl = "",
@@ -373,9 +463,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2bd0613e-1e6f-411f-8243-a0c490d6743e"),
+                            Id = "2bd0613e-1e6f-411f-8243-a0c490d6743e",
                             Author = "Abby Muscles",
-                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            CategoryId = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "WS3333333301",
                             ImageUrl = "",
@@ -387,9 +477,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("49758f0d-774a-481f-8647-48a2845b4ebe"),
+                            Id = "49758f0d-774a-481f-8647-48a2845b4ebe",
                             Author = "Ron Parker",
-                            CategoryId = new Guid("f477d305-d208-425c-a998-2039921bb8de"),
+                            CategoryId = "f477d305-d208-425c-a998-2039921bb8de",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "SOTJ1111111101",
                             ImageUrl = "",
@@ -401,9 +491,9 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0767fb28-f5af-4a42-84e7-3c1d503efd80"),
+                            Id = "0767fb28-f5af-4a42-84e7-3c1d503efd80",
                             Author = "Laura Phantom",
-                            CategoryId = new Guid("89cd8a8c-50df-4cf5-a593-16de5813d6aa"),
+                            CategoryId = "89cd8a8c-50df-4cf5-a593-16de5813d6aa",
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                             ISBN = "FOT000000001",
                             ImageUrl = "",
@@ -415,31 +505,67 @@ namespace Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Models.ShoppingCart", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShoppingCarts");
+                });
+
             modelBuilder.Entity("Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CompanyId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -504,6 +630,34 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Models.ShoppingCart", b =>
+                {
+                    b.HasOne("Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Models.User", b =>
+                {
+                    b.HasOne("Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }

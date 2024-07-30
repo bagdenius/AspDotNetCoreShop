@@ -1,6 +1,7 @@
 ﻿using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Models;
 using Utility;
 
@@ -30,8 +31,9 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && category.Id == Guid.Empty.ToString())
             {
+                category.Id = Guid.NewGuid().ToString();
                 _unitOfWork.Category.Add(category);
                 _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
@@ -40,9 +42,9 @@ namespace MVCProject.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Edit(Guid id)
+        public IActionResult Edit(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty)
+            if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
                 Category category = _unitOfWork.Category.Get(id);
                 return View(category);
@@ -53,7 +55,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && category.Id != Guid.Empty.ToString())
             {
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Category.Save();
@@ -63,9 +65,9 @@ namespace MVCProject.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty)
+            if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
                 Category category = _unitOfWork.Category.Get(id);
                 return View(category);
@@ -74,9 +76,9 @@ namespace MVCProject.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(Guid id)
+        public IActionResult DeletePOST(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty)
+            if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
                 Category category = _unitOfWork.Category.Get(id);
                 _unitOfWork.Category.Remove(category);

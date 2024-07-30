@@ -15,7 +15,7 @@ namespace Models
         public string PostalCode { get; set; }
 
 
-        public Guid? CompanyId { get; set; }
+        public string? CompanyId { get; set; }
         [ForeignKey("CompanyId"), ValidateNever]
         public Company Company { get; set; }
     }

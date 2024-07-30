@@ -22,11 +22,11 @@ namespace MVCProject.Areas.Admin.Controllers
             return View(companies);
         }
 
-        public IActionResult Upsert(Guid id)
+        public IActionResult Upsert(string? id)
         {
             if (ModelState.IsValid)
             {
-                if (id == Guid.Empty)
+                if (id == null)
                 {
                     return View(new Company());
                 }
@@ -41,8 +41,9 @@ namespace MVCProject.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (company.Id == Guid.Empty)
+                if (company.Id == Guid.Empty.ToString())
                 {
+                    company.Id = Guid.NewGuid().ToString();
                     _unitOfWork.Company.Add(company);
                     TempData["success"] = "Company created successfully";
                 }
@@ -60,7 +61,7 @@ namespace MVCProject.Areas.Admin.Controllers
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll(int id)
+        public IActionResult GetAll()
         {
             if (ModelState.IsValid)
             {
@@ -71,9 +72,9 @@ namespace MVCProject.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
                 Company company = _unitOfWork.Company.Get(id);
                 if (company == null)

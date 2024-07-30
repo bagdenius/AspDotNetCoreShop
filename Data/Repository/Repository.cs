@@ -1,14 +1,16 @@
 ﻿using Data.Database;
 using Data.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Models;
+using System.Linq.Expressions;
 
 namespace Data.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public abstract class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
-        public Repository(ApplicationDbContext db)
+        protected Repository(ApplicationDbContext db)
         {
             _db = db;
             dbSet = _db.Set<T>();
@@ -19,25 +21,11 @@ namespace Data.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Guid id, string? includeProperties = null)
-        {
-            if (string.IsNullOrEmpty(includeProperties))
-            {
-                return dbSet.Find(id);
-            }
+        public abstract T Get(string id, string? includeProperties = null, bool tracked = false);
 
-            IQueryable<T> query = dbSet;
-            foreach (var property in includeProperties
-                .Split(',', StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(property);
-            }
-            return query.FirstOrDefault();
-        }
-
-        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
             query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
