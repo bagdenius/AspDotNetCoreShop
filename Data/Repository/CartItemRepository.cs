@@ -5,22 +5,22 @@ using Models;
 
 namespace Data.Repository
 {
-    public class ShoppingCartRepository : Repository<ShoppingCart>, IShoppingCartRepository
+    public class CartItemRepository : Repository<CartItem>, ICartItemRepository
     {
         private readonly ApplicationDbContext _db;
-        public ShoppingCartRepository(ApplicationDbContext db) : base(db)
+        public CartItemRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public new void Update(ShoppingCart shoppingCart)
+        public new void Update(CartItem shoppingCart)
         {
-            _db.ShoppingCarts.Update(shoppingCart);
+            _db.CartItems.Update(shoppingCart);
         }
 
-        public override ShoppingCart Get(string id, string? includeProperties = null, bool tracked = false)
+        public override CartItem Get(string id, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<ShoppingCart> query = tracked ? dbSet : dbSet.AsNoTracking();
+            IQueryable<CartItem> query = tracked ? dbSet : dbSet.AsNoTracking();
             query = query.Where(c => c.Id == id);
             if (!string.IsNullOrEmpty(includeProperties))
             {

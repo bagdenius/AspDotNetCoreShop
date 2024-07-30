@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
-    public class ShoppingCart
+    public class CartItem
     {
         [Key]
         public string Id { get; set; } = Guid.Empty.ToString();
@@ -21,5 +21,8 @@ namespace Models
 
         [ForeignKey("UserId"), ValidateNever]
         public User User { get; set; }
+
+        [NotMapped]
+        public double Price { get; set; }
     }
 }

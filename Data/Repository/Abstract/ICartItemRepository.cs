@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Data.Repository.Abstract
 {
-    public interface IShoppingCartRepository : IRepository<ShoppingCart>
+    public interface ICartItemRepository : IRepository<CartItem>
     {
-        new void Update(ShoppingCart shoppingCart);
+        new void Update(CartItem shoppingCart);
     }
 }

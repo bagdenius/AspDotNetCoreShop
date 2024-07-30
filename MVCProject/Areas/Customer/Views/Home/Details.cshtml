@@ -1,4 +1,4 @@
-﻿@model ShoppingCart
+﻿@model CartItem
 
 <form method="post">
     <input hidden asp-for="ProductId" />
@@ -15,9 +15,7 @@
             <div class="py-3">
                 <div class="row">
                     <div class="col-6 col-md-2 offset-lg-1 pb-1">
-                        <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
-                            <small>Back to home</small>
-                        </a>
+                        <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase"><small>Back to home</small></a>
                     </div>
                 </div>
                 <div class="row">
@@ -25,7 +23,6 @@
                         <img src="@Model.Product.ImageUrl" width="100%" class="rounded" />
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
-
                         <div class="col-12 col-md-6 pb-4">
                             <span class="badge">@Model.Product.Category.Name</span>
                         </div>
@@ -33,12 +30,7 @@
                             <h6 class="text-dark text-opacity-50 ">ISBN: @Model.Product.ISBN</h6>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50  pb-2">
-                                List Price:
-                                <span class="text-decoration-line-through">
-                                    @Model.Product.ListPrice.ToString("c")
-                                </span>
-                            </h6>
+                            <h6 class="text-dark text-opacity-50 pb-2">List Price:<span class="text-decoration-line-through">@Model.Product.ListPrice.ToString("c")</span></h6>
                         </div>
                         <div class="row text-center ps-2">
                             <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
@@ -74,13 +66,8 @@
                         <div class="row pl-2 mb-3">
                             <div class="col-md-4">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"
-                                          id="inputGroup-sizing-default">
-                                        Count
-                                    </span>
-                                    <input asp-for="Count" type="number" value="1" class="form-control text-end"
-                                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"id="inputGroup-sizing-default">Count</span>
+                                    <input asp-for="Count" type="number" value="1" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                                 </div>
                             </div>
                         </div>
@@ -90,7 +77,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

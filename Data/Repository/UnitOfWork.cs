@@ -9,21 +9,21 @@ namespace Data.Repository
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; private set; }
         public ICompanyRepository Company { get; private set; }
-        public IShoppingCartRepository ShoppingCart { get; private set; }
+        public ICartItemRepository CartItem { get; private set; }
         public IUserRepository User { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db,
             ICategoryRepository categoryRepository,
             IProductRepository productRepository,
             ICompanyRepository companyRepository,
-            IShoppingCartRepository shoppingCart,
+            ICartItemRepository shoppingCart,
             IUserRepository user)
         {
             _db = db;
             Category = categoryRepository;
             Product = productRepository;
             Company = companyRepository;
-            ShoppingCart = shoppingCart;
+            CartItem = shoppingCart;
             User = user;
         }
 

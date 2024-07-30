@@ -29,7 +29,7 @@ namespace MVCProject.Areas.Customer.Controllers
         {
             if (ModelState.IsValid && id != Guid.Empty.ToString())
             {
-                ShoppingCart shoppingCart = new()
+                CartItem shoppingCart = new()
                 {
                     Product = _unitOfWork.Product.Get(id, "Category"),
                     ProductId = id,
@@ -41,25 +41,28 @@ namespace MVCProject.Areas.Customer.Controllers
         }
 
         [HttpPost, Authorize]
-        public IActionResult Details(ShoppingCart shoppingCart)
+        public IActionResult Details(CartItem shoppingCart)
         {
             if (ModelState.IsValid)
             {
                 ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
                 string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 shoppingCart.UserId = userId;
-                ShoppingCart duplicateCart = _unitOfWork.ShoppingCart
+                CartItem duplicateCart = _unitOfWork.CartItem
                     .Get(sc => sc.UserId == userId && sc.ProductId == shoppingCart.ProductId);
                 if (duplicateCart != null)
                 {
                     duplicateCart.Count += shoppingCart.Count;
-                    _unitOfWork.ShoppingCart.Update(duplicateCart);
+                    _unitOfWork.CartItem.Update(duplicateCart);
+                    TempData["success"] = "Product was updated in cart";
                 }
                 else
                 {
-                    _unitOfWork.ShoppingCart.Add(shoppingCart);
+                    _unitOfWork.CartItem.Add(shoppingCart);
+                    TempData["success"] = "Product was added to cart";
                 }
                 _unitOfWork.Save();
+                
                 return RedirectToAction(nameof(Index));
             }
             return NotFound();
