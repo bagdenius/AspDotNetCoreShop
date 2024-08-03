@@ -16,7 +16,7 @@ namespace Models
 
 
         public string? CompanyId { get; set; }
-        [ForeignKey("CompanyId"), ValidateNever]
+        [ForeignKey(nameof(CompanyId)), ValidateNever]
         public Company Company { get; set; }
     }
 }

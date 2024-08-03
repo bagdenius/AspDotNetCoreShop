@@ -1,7 +1,6 @@
 ﻿using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Models;
 using Utility;
 
@@ -37,7 +36,7 @@ namespace MVCProject.Areas.Admin.Controllers
                 _unitOfWork.Category.Add(category);
                 _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
@@ -60,7 +59,7 @@ namespace MVCProject.Areas.Admin.Controllers
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Category.Save();
                 TempData["success"] = "Category updated successfully";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
@@ -84,7 +83,7 @@ namespace MVCProject.Areas.Admin.Controllers
                 _unitOfWork.Category.Remove(category);
                 _unitOfWork.Save();
                 TempData["success"] = "Category deleted successfully";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return NotFound();
         }

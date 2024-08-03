@@ -37,7 +37,7 @@ namespace Data.Repository
         public override Product Get(string id, string? includeProperties = null, bool tracked = false)
         {
             IQueryable<Product> query = tracked ? dbSet : dbSet.AsNoTracking();
-            query = query.Where(c => c.Id == id);
+            query = query.Where(p => p.Id == id);
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties

@@ -7,6 +7,8 @@
         ICompanyRepository Company { get; }
         ICartItemRepository CartItem { get; }
         IUserRepository User { get; }
+        IOrderRepository Order { get; }
+        IOrderDetailRepository OrderDetail { get; }
         void Save();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Data.Database;
 using Data.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using System.Linq.Expressions;
 
 namespace Data.Repository
@@ -38,9 +37,10 @@ namespace Data.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
         {
             IQueryable<T> query = filter == null ? dbSet : dbSet.Where(filter);
+            query = tracked ? query : query.AsNoTracking();
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties

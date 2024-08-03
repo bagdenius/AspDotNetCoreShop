@@ -87,7 +87,7 @@ namespace MVCProject.Areas.Admin.Controllers
                     TempData["success"] = "Product updated successfully";
                 }
                 _unitOfWork.Save();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             productVM.CategoryList = _unitOfWork.Category.GetAll()
                 .Select(c => new SelectListItem

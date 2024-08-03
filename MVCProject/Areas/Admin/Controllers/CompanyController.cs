@@ -53,7 +53,7 @@ namespace MVCProject.Areas.Admin.Controllers
                     TempData["success"] = "Company updated successfully";
                 }
                 _unitOfWork.Save();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(company);
         }

@@ -25,44 +25,45 @@ namespace MVCProject.Areas.Customer.Controllers
             return View(products);
         }
 
-        public IActionResult Details(string id)
+        public IActionResult Details(string productId)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
+            if (ModelState.IsValid && productId != Guid.Empty.ToString())
             {
-                CartItem shoppingCart = new()
+                CartItem item = new()
                 {
-                    Product = _unitOfWork.Product.Get(id, "Category"),
-                    ProductId = id,
-                    Count = 1
+                    Product = _unitOfWork.Product.Get(productId, "Category"),
+                    Count = 1,
+                    ProductId = productId
                 };
-                return View(shoppingCart);
+                return View(item);
             }
             return NotFound();
         }
 
         [HttpPost, Authorize]
-        public IActionResult Details(CartItem shoppingCart)
+        public IActionResult Details(CartItem item)
         {
             if (ModelState.IsValid)
             {
                 ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
                 string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                shoppingCart.UserId = userId;
-                CartItem duplicateCart = _unitOfWork.CartItem
-                    .Get(sc => sc.UserId == userId && sc.ProductId == shoppingCart.ProductId);
-                if (duplicateCart != null)
+                item.UserId = userId;
+                CartItem duplicateItem = _unitOfWork.CartItem
+                    .Get(di => di.UserId == userId && di.ProductId == item.ProductId);
+                if (duplicateItem != null)
                 {
-                    duplicateCart.Count += shoppingCart.Count;
-                    _unitOfWork.CartItem.Update(duplicateCart);
+                    duplicateItem.Count += item.Count;
+                    _unitOfWork.CartItem.Update(duplicateItem);
                     TempData["success"] = "Product was updated in cart";
                 }
                 else
                 {
-                    _unitOfWork.CartItem.Add(shoppingCart);
+                    item.Id = Guid.NewGuid().ToString();
+                    _unitOfWork.CartItem.Add(item);
                     TempData["success"] = "Product was added to cart";
                 }
                 _unitOfWork.Save();
-                
+
                 return RedirectToAction(nameof(Index));
             }
             return NotFound();

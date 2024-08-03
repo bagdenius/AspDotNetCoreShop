@@ -21,7 +21,7 @@ namespace Data.Repository
         public override CartItem Get(string id, string? includeProperties = null, bool tracked = false)
         {
             IQueryable<CartItem> query = tracked ? dbSet : dbSet.AsNoTracking();
-            query = query.Where(c => c.Id == id);
+            query = query.Where(ci => ci.Id == id);
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties

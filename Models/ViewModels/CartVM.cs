@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.ViewModels
+﻿namespace Models.ViewModels
 {
     public class CartVM
     {
         public IEnumerable<CartItem> Items { get; set; }
-        public double OrderTotal { get; set; }
+        public Order Order { get; set; }
     }
 }

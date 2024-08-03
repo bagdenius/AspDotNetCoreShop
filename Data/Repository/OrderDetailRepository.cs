@@ -5,18 +5,23 @@ using Models;
 
 namespace Data.Repository
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class OrderDetailRepository : Repository<OrderDetail>, IOrderDetailRepository
     {
         private readonly ApplicationDbContext _db;
-        public UserRepository(ApplicationDbContext db) : base(db)
+        public OrderDetailRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public override User Get(string id, string? includeProperties = null, bool tracked = false)
+        public new void Update(OrderDetail orderDetail)
         {
-            IQueryable<User> query = tracked ? dbSet : dbSet.AsNoTracking();
-            query = query.Where(u => u.Id == id);
+            _db.OrderDetails.Update(orderDetail);
+        }
+
+        public override OrderDetail Get(string id, string? includeProperties = null, bool tracked = false)
+        {
+            IQueryable<OrderDetail> query = tracked ? dbSet : dbSet.AsNoTracking();
+            query = query.Where(od => od.Id == id);
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties

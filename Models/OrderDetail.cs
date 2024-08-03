@@ -4,23 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
-    public class CartItem
+    public class OrderDetail
     {
         [Key]
         public string Id { get; set; } = Guid.Empty.ToString();
 
-        public string ProductId { get; set; } = Guid.Empty.ToString();
+        [Required]
+        public string OrderId { get; set; }
+        [ForeignKey(nameof(OrderId)), ValidateNever]
+        public Order Order { get; set; }
+
+        [Required]
+        public string ProductId { get; set; }
         [ForeignKey(nameof(ProductId)), ValidateNever]
         public Product Product { get; set; }
 
-        [Range(1, 1000, ErrorMessage = "The value should be between 1 and 1000")]
         public int Count { get; set; }
-
-        public string UserId { get; set; } = Guid.Empty.ToString();
-        [ForeignKey(nameof(UserId)), ValidateNever]
-        public User User { get; set; }
-
-        [NotMapped]
         public double Price { get; set; }
     }
 }
