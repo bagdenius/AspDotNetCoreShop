@@ -44,7 +44,7 @@ namespace MVCProject.Areas.Customer.Controllers
             string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             cart = new()
             {
-                Items = _unitOfWork.CartItem.GetAll(ci => ci.UserId == userId, "Product")
+                Items = _unitOfWork.CartItem.GetAll(i => i.UserId == userId, "Product")
             };
             cart.Order = new()
             {
@@ -71,7 +71,7 @@ namespace MVCProject.Areas.Customer.Controllers
         {
             ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
             string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            cart.Items = _unitOfWork.CartItem.GetAll(ci => ci.UserId == userId, "Product");
+            cart.Items = _unitOfWork.CartItem.GetAll(i => i.UserId == userId, "Product");
             cart.Order.Id = Guid.NewGuid().ToString();
             cart.Order.Date = DateTime.Now;
             cart.Order.UserId = userId;
@@ -95,7 +95,7 @@ namespace MVCProject.Areas.Customer.Controllers
             _unitOfWork.Save();
             foreach (var item in cart.Items)
             {
-                _unitOfWork.OrderDetail.Add(new()
+                _unitOfWork.OrderItem.Add(new()
                 {
                     Id = Guid.NewGuid().ToString(),
                     ProductId = item.ProductId,
@@ -108,7 +108,7 @@ namespace MVCProject.Areas.Customer.Controllers
             if (user.CompanyId == null || user.CompanyId == Guid.Empty.ToString())
             {
                 string domain = "https://localhost:44364/";
-                var options = new Stripe.Checkout.SessionCreateOptions
+                var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"Customer/Cart/OrderConfirmation?id={cart.Order.Id}",
                     CancelUrl = domain + "Customer/Cart/Index",
@@ -157,7 +157,7 @@ namespace MVCProject.Areas.Customer.Controllers
                     _unitOfWork.Order.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.Save();
                 }
-                IEnumerable<CartItem> items = _unitOfWork.CartItem.GetAll(ci => ci.UserId == order.UserId);
+                IEnumerable<CartItem> items = _unitOfWork.CartItem.GetAll(i => i.UserId == order.UserId);
                 _unitOfWork.CartItem.RemoveRange(items);
                 _unitOfWork.Save();
             }

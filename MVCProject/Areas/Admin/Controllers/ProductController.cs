@@ -103,13 +103,8 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            if (ModelState.IsValid)
-            {
-                IEnumerable<Product> products = _unitOfWork.Product
-                    .GetAll(includeProperties: "Category");
-                return Json(new { data = products });
-            }
-            return NotFound();
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            return Json(new { data = products });
         }
 
         [HttpDelete]

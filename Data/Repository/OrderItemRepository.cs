@@ -5,22 +5,22 @@ using Models;
 
 namespace Data.Repository
 {
-    public class OrderDetailRepository : Repository<OrderDetail>, IOrderDetailRepository
+    public class OrderItemRepository : Repository<OrderItem>, IOrderItemRepository
     {
         private readonly ApplicationDbContext _db;
-        public OrderDetailRepository(ApplicationDbContext db) : base(db)
+        public OrderItemRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public new void Update(OrderDetail orderDetail)
+        public new void Update(OrderItem orderDetail)
         {
-            _db.OrderDetails.Update(orderDetail);
+            _db.OrderItems.Update(orderDetail);
         }
 
-        public override OrderDetail Get(string id, string? includeProperties = null, bool tracked = false)
+        public override OrderItem Get(string id, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<OrderDetail> query = tracked ? dbSet : dbSet.AsNoTracking();
+            IQueryable<OrderItem> query = tracked ? dbSet : dbSet.AsNoTracking();
             query = query.Where(od => od.Id == id);
             if (!string.IsNullOrEmpty(includeProperties))
             {

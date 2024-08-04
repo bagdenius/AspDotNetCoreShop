@@ -12,25 +12,25 @@ namespace Data.Repository
         public ICartItemRepository CartItem { get; private set; }
         public IUserRepository User { get; private set; }
         public IOrderRepository Order { get; private set; }
-        public IOrderDetailRepository OrderDetail { get; private set; }
+        public IOrderItemRepository OrderItem { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db,
             ICategoryRepository categoryRepository,
             IProductRepository productRepository,
             ICompanyRepository companyRepository,
-            ICartItemRepository shoppingCart,
+            ICartItemRepository cartItem,
             IUserRepository user,
             IOrderRepository order,
-            IOrderDetailRepository orderDetail)
+            IOrderItemRepository orderItem)
         {
             _db = db;
             Category = categoryRepository;
             Product = productRepository;
             Company = companyRepository;
-            CartItem = shoppingCart;
+            CartItem = cartItem;
             User = user;
             Order = order;
-            OrderDetail = orderDetail;
+            OrderItem = orderItem;
         }
 
         public void Save()

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
-    public class OrderDetail
+    public class OrderItem
     {
         [Key]
         public string Id { get; set; } = Guid.Empty.ToString();
