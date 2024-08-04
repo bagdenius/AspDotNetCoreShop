@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModels;
+using System.Diagnostics;
+using Utility;
 
 namespace MVCProject.Areas.Admin.Controllers
 {
@@ -14,27 +16,30 @@ namespace MVCProject.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string status)
         {
-            IEnumerable<Order> orders = _unitOfWork.Order.GetAll();
-            List<OrderVM> orderVMs = [];
-            foreach (var order in orders)
-            {
-                orderVMs.Add(new()
-                {
-                    Order = order,
-                    Items = _unitOfWork.OrderItem.GetAll(i => i.OrderId == order.Id)
-                });
-            }
-            return View(orderVMs);
+            return View();
+        }
+
+        public IActionResult Details(string? id)
+        {
+            return View();
         }
 
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(string status)
         {
             IEnumerable<Order> orders = _unitOfWork.Order.GetAll(includeProperties: "User");
+            switch (status)
+            {
+                case "inprocess": orders = orders.Where(o => o.Status == SD.StatusInProcess); break;
+                case "pending": orders = orders.Where(o => o.PaymentStatus == SD.PaymentStatusDelayedPayment); break;
+                case "completed": orders = orders.Where(o => o.Status == SD.StatusShipped); break;
+                case "approved": orders = orders.Where(o => o.Status == SD.StatusApproved); break;
+                default: break;
+            }
             return Json(new { data = orders });
         }
 
