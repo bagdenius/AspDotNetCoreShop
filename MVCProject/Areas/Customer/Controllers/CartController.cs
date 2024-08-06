@@ -1,5 +1,6 @@
 ﻿using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModels;
@@ -13,12 +14,15 @@ namespace MVCProject.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailSender _emailSender;
         [BindProperty]
         public CartVM cart { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork)
+        public CartController(IUnitOfWork unitOfWork,
+            IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -115,7 +119,6 @@ namespace MVCProject.Areas.Customer.Controllers
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
-
                 foreach (var item in cart.Items)
                 {
                     SessionLineItemOptions sessionLineItem = new()
@@ -133,7 +136,6 @@ namespace MVCProject.Areas.Customer.Controllers
                     };
                     options.LineItems.Add(sessionLineItem);
                 }
-
                 var service = new SessionService();
                 Session session = service.Create(options);
                 _unitOfWork.Order.UpdateStripePaymentId(cart.Order.Id, session.Id, session.PaymentIntentId);
@@ -157,6 +159,7 @@ namespace MVCProject.Areas.Customer.Controllers
                     _unitOfWork.Order.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.Save();
                 }
+                _emailSender.SendEmailAsync(order.User.Email, "Your order on AspNetCoreShop", $"<p>Your order number is {order.Id}</p>");
                 IEnumerable<CartItem> items = _unitOfWork.CartItem.GetAll(i => i.UserId == order.UserId);
                 _unitOfWork.CartItem.RemoveRange(items);
                 _unitOfWork.Save();
