@@ -6,12 +6,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Utility;
 
 namespace MVCProject.Areas.Identity.Pages.Account
 {
@@ -76,9 +80,35 @@ namespace MVCProject.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required, Display(Name = "Username")]
+            public string UserName { get; set; }
+
+            [Required, EmailAddress, DataType(DataType.EmailAddress), Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
+            [Display(Name = "Surname")]
+            public string Surname { get; set; }
+
+            [Display(Name = "Country")]
+            public string Country { get; set; }
+
+            [Display(Name = "State")]
+            public string State { get; set; }
+
+            [Display(Name = "City")]
+            public string City { get; set; }
+
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
+            [DataType(DataType.PostalCode), Display(Name = "Postal Code")]
+            public string PostalCode { get; set; }
+
+            [DataType(DataType.PhoneNumber), Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
         }
 
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -126,7 +156,9 @@ namespace MVCProject.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        Name = info.Principal.FindFirstValue(ClaimTypes.Name),
+                        Surname = info.Principal.FindFirstValue(ClaimTypes.Surname)
                     };
                 }
                 return Page();
@@ -148,12 +180,21 @@ namespace MVCProject.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.Name = Input.Name;
+                user.Surname = Input.Surname;
+                user.Country = Input.Country;
+                user.State = Input.State;
+                user.City = Input.City;
+                user.Address = Input.Address;
+                user.PostalCode = Input.PostalCode;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, SD.Role_Customer);
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
@@ -192,11 +233,11 @@ namespace MVCProject.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private User CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<User>();
             }
             catch
             {

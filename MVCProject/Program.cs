@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.Configure<FacebookSettings>(builder.Configuration.GetSection("Facebook"));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -37,6 +38,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = $"/Identity/Account/Login";
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = builder.Configuration.GetSection("Facebook:AppId").Get<string>();
+    options.AppSecret = builder.Configuration.GetSection("Facebook:AppSecret").Get<string>();
 });
 
 builder.Services.AddDistributedMemoryCache();

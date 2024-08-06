@@ -86,10 +86,9 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 p-3 text-center">
                 <section>
                     <p class="divider-text d-flex mt-3">or</p>
-                    <h3>Use another service to register.</h3>
                     @{
                         if ((Model.ExternalLogins?.Count ?? 0) == 0)
                         {
@@ -125,8 +124,8 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        $(function () {
-            $('#Input_Role').change(function () {
+        $(function() {
+            $('#Input_Role').change(function() {
                 var selection = $('#Input_Role Option:Selected').text();
                 if (selection == '@SD.Role_Company') {
                     $('#Company_Input').show();
