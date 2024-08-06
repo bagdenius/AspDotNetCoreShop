@@ -1,4 +1,6 @@
 using Data.Database;
+using Data.DbInitializer;
+using Data.DbInitializer.Abstract;
 using Data.Repository;
 using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Identity;
@@ -54,7 +56,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -82,6 +84,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+SeedDatabase();
 
 app.MapControllerRoute(
     name: "default",
@@ -90,3 +93,12 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        IDbInitializer initializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        initializer.Initialize();
+    }
+}

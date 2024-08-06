@@ -126,14 +126,6 @@ namespace MVCProject.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!await _roleManager.RoleExistsAsync(SD.Role_Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
-                await _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer));
-                await _roleManager.CreateAsync(new IdentityRole(SD.Role_Company));
-                await _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee));
-            }
-
             Input = new()
             {
                 RoleList = _roleManager.Roles
