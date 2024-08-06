@@ -160,6 +160,7 @@ namespace MVCProject.Areas.Customer.Controllers
                 IEnumerable<CartItem> items = _unitOfWork.CartItem.GetAll(i => i.UserId == order.UserId);
                 _unitOfWork.CartItem.RemoveRange(items);
                 _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, 0);
             }
             return View((object)id);
         }
