@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Diagnostics;
 using System.Security.Claims;
+using Utility;
 
 namespace MVCProject.Areas.Customer.Controllers
 {
@@ -22,6 +23,11 @@ namespace MVCProject.Areas.Customer.Controllers
         public IActionResult Index()
         {
             IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            Claim? userNameIdentifierClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+            if (userNameIdentifierClaim != null)
+            {
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == userNameIdentifierClaim.Value).Count());
+            }
             return View(products);
         }
 
@@ -48,8 +54,7 @@ namespace MVCProject.Areas.Customer.Controllers
                 ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
                 string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 item.UserId = userId;
-                CartItem duplicateItem = _unitOfWork.CartItem
-                    .Get(di => di.UserId == userId && di.ProductId == item.ProductId);
+                CartItem duplicateItem = _unitOfWork.CartItem.Get(i => i.UserId == userId && i.ProductId == item.ProductId);
                 if (duplicateItem != null)
                 {
                     duplicateItem.Count += item.Count;
@@ -63,7 +68,7 @@ namespace MVCProject.Areas.Customer.Controllers
                     TempData["success"] = "Product was added to cart";
                 }
                 _unitOfWork.Save();
-
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == userId).Count());
                 return RedirectToAction(nameof(Index));
             }
             return NotFound();

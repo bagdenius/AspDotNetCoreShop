@@ -5,8 +5,6 @@ using Models;
 using Models.ViewModels;
 using Stripe;
 using Stripe.Checkout;
-using Stripe.Issuing;
-using System.Diagnostics;
 using System.Security.Claims;
 using Utility;
 

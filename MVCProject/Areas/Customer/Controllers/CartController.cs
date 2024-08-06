@@ -183,6 +183,7 @@ namespace MVCProject.Areas.Customer.Controllers
                 CartItem item = _unitOfWork.CartItem.Get(itemId);
                 if (item.Count <= 1)
                 {
+                    HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
                     _unitOfWork.CartItem.Remove(item);
                 }
                 else
@@ -200,6 +201,7 @@ namespace MVCProject.Areas.Customer.Controllers
             if (ModelState.IsValid)
             {
                 CartItem item = _unitOfWork.CartItem.Get(itemId);
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
                 _unitOfWork.CartItem.Remove(item);
                 _unitOfWork.Save();
             }
