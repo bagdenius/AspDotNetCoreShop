@@ -111,7 +111,7 @@ namespace MVCProject.Areas.Customer.Controllers
             }
             if (user.CompanyId == null || user.CompanyId == Guid.Empty.ToString())
             {
-                string domain = "https://localhost:44364/";
+                string domain = Request.Scheme + "://" + Request.Host.Value + "/";
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"Customer/Cart/OrderConfirmation?id={cart.Order.Id}",

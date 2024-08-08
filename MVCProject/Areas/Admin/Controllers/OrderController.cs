@@ -119,7 +119,7 @@ namespace MVCProject.Areas.Admin.Controllers
             OrderVM.Order = _unitOfWork.Order.Get(o => o.Id == OrderVM.Order.Id, "User");
             OrderVM.Items = _unitOfWork.OrderItem.GetAll(i => i.OrderId == OrderVM.Order.Id, "Product");
 
-            string domain = "https://localhost:44364/";
+            string domain = Request.Scheme + "://" + Request.Host.Value + "/"; ;
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"Admin/Order/PaymentConfirmation?id={OrderVM.Order.Id}",
