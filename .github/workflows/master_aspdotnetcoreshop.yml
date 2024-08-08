@@ -25,13 +25,13 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/AspDotNetCoreShop
+        run: dotnet publish -c Release -o C:/stuff/programing/cs/AspDotNetCoreShop
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/AspDotNetCoreShop
+          path: C:/stuff/programing/cs/AspDotNetCoreShop
 
   deploy:
     runs-on: windows-latest
