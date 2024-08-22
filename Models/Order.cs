@@ -6,7 +6,7 @@ namespace Models
 {
     public class Order
     {
-        public string Id { get; set; } = Guid.Empty.ToString();
+        public string Id { get; set; }
 
         // Order info
         public string? SessionId { get; set; }

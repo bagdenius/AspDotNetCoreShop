@@ -21,6 +21,7 @@ namespace Data.Database
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,8 +65,7 @@ namespace Data.Database
                     Price = 90,
                     Price50 = 85,
                     Price100 = 80,
-                    CategoryId = Guid.Parse("f477d305-d208-425c-a998-2039921bb8de").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("f477d305-d208-425c-a998-2039921bb8de").ToString()
                 },
                 new Product
                 {
@@ -78,8 +78,7 @@ namespace Data.Database
                     Price = 30,
                     Price50 = 25,
                     Price100 = 20,
-                    CategoryId = Guid.Parse("950c60da-0ebd-4343-887b-b4dd178f6a29").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("950c60da-0ebd-4343-887b-b4dd178f6a29").ToString()
                 },
                 new Product
                 {
@@ -92,8 +91,7 @@ namespace Data.Database
                     Price = 50,
                     Price50 = 40,
                     Price100 = 35,
-                    CategoryId = Guid.Parse("d9e57bb3-8446-4e7d-9243-6b3b52010680").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("d9e57bb3-8446-4e7d-9243-6b3b52010680").ToString()
                 },
                 new Product
                 {
@@ -106,8 +104,7 @@ namespace Data.Database
                     Price = 65,
                     Price50 = 60,
                     Price100 = 55,
-                    CategoryId = Guid.Parse("89cd8a8c-50df-4cf5-a593-16de5813d6aa").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("89cd8a8c-50df-4cf5-a593-16de5813d6aa").ToString()
                 },
                 new Product
                 {
@@ -120,8 +117,7 @@ namespace Data.Database
                     Price = 27,
                     Price50 = 25,
                     Price100 = 20,
-                    CategoryId = Guid.Parse("f477d305-d208-425c-a998-2039921bb8de").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("f477d305-d208-425c-a998-2039921bb8de").ToString()
                 },
                 new Product
                 {
@@ -134,8 +130,7 @@ namespace Data.Database
                     Price = 23,
                     Price50 = 22,
                     Price100 = 20,
-                    CategoryId = Guid.Parse("89cd8a8c-50df-4cf5-a593-16de5813d6aa").ToString(),
-                    ImageUrl = ""
+                    CategoryId = Guid.Parse("89cd8a8c-50df-4cf5-a593-16de5813d6aa").ToString()
                 });
 
             modelBuilder.Entity<Company>().HasData(

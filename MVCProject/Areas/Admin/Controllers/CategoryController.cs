@@ -30,7 +30,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            if (ModelState.IsValid && category.Id == Guid.Empty.ToString())
+            if (category.Id == null)
             {
                 category.Id = Guid.NewGuid().ToString();
                 _unitOfWork.Category.Add(category);
@@ -43,7 +43,7 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
+            if (ModelState.IsValid && id != null)
             {
                 Category category = _unitOfWork.Category.Get(id);
                 return View(category);
@@ -54,7 +54,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            if (ModelState.IsValid && category.Id != Guid.Empty.ToString())
+            if (ModelState.IsValid && category.Id != null)
             {
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Category.Save();
@@ -66,8 +66,8 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
-            {
+            if (ModelState.IsValid && id != null)
+            {   
                 Category category = _unitOfWork.Category.Get(id);
                 return View(category);
             }
@@ -77,7 +77,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
+            if (ModelState.IsValid && id != null)
             {
                 Category category = _unitOfWork.Category.Get(id);
                 _unitOfWork.Category.Remove(category);

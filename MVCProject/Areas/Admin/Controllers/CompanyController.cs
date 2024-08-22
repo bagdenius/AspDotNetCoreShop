@@ -24,38 +24,30 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Upsert(string? id)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                if (id == null)
-                {
-                    return View(new Company());
-                }
-                Company company = _unitOfWork.Company.Get(id);
-                return View(company);
+                return View(new Company());
             }
-            return NotFound();
+            Company company = _unitOfWork.Company.Get(id);
+            return View(company);
         }
 
         [HttpPost]
         public IActionResult Upsert(Company company)
         {
-            if (ModelState.IsValid)
+            if (company.Id == null)
             {
-                if (company.Id == Guid.Empty.ToString())
-                {
-                    company.Id = Guid.NewGuid().ToString();
-                    _unitOfWork.Company.Add(company);
-                    TempData["success"] = "Company created successfully";
-                }
-                else
-                {
-                    _unitOfWork.Company.Update(company);
-                    TempData["success"] = "Company updated successfully";
-                }
-                _unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
+                company.Id = Guid.NewGuid().ToString();
+                _unitOfWork.Company.Add(company);
+                TempData["success"] = "Company created successfully";
             }
-            return View(company);
+            else
+            {
+                _unitOfWork.Company.Update(company);
+                TempData["success"] = "Company updated successfully";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
         }
 
         #region API CALLS
@@ -74,7 +66,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
+            if (ModelState.IsValid && id != null)
             {
                 Company company = _unitOfWork.Company.Get(id);
                 if (company == null)

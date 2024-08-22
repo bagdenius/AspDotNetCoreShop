@@ -85,7 +85,7 @@ namespace MVCProject.Areas.Customer.Controllers
                 item.Price = GetPriceBasedOnQuantity(item);
                 cart.Order.Total += item.Price * item.Count;
             }
-            if (user.CompanyId == null || user.CompanyId == Guid.Empty.ToString())
+            if (user.CompanyId == null)
             {
                 cart.Order.Status = SD.StatusPending;
                 cart.Order.PaymentStatus = SD.PaymentStatusPending;
@@ -109,7 +109,7 @@ namespace MVCProject.Areas.Customer.Controllers
                 });
                 _unitOfWork.Save();
             }
-            if (user.CompanyId == null || user.CompanyId == Guid.Empty.ToString())
+            if (user.CompanyId == null)
             {
                 string domain = Request.Scheme + "://" + Request.Host.Value + "/";
                 var options = new SessionCreateOptions

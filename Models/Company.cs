@@ -5,7 +5,7 @@ namespace Models
     public class Company
     {
         [Key]
-        public string Id { get; set; } = Guid.Empty.ToString();
+        public string Id { get; set; }
 
         [Required]
         public string Name { get; set; }

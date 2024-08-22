@@ -13,6 +13,7 @@ namespace Data.Repository
         public IUserRepository User { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IOrderItemRepository OrderItem { get; private set; }
+        public IProductImageRepository ProductImage { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db,
             ICategoryRepository categoryRepository,
@@ -21,7 +22,8 @@ namespace Data.Repository
             ICartItemRepository cartItem,
             IUserRepository user,
             IOrderRepository order,
-            IOrderItemRepository orderItem)
+            IOrderItemRepository orderItem,
+            IProductImageRepository productImage)
         {
             _db = db;
             Category = categoryRepository;
@@ -31,6 +33,7 @@ namespace Data.Repository
             User = user;
             Order = order;
             OrderItem = orderItem;
+            ProductImage = productImage;
         }
 
         public void Save()

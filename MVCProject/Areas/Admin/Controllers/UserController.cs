@@ -130,7 +130,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != Guid.Empty.ToString())
+            if (ModelState.IsValid && id != null)
             {
                 User User = _db.Users.FirstOrDefault(u => u.Id == id);
                 if (User == null)

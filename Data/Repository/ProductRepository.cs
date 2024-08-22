@@ -27,10 +27,7 @@ namespace Data.Repository
                 updatedProduct.Price50 = product.Price50;
                 updatedProduct.Price100 = product.Price100;
                 updatedProduct.CategoryId = product.CategoryId;
-                if (product.ImageUrl != null)
-                {
-                    updatedProduct.ImageUrl = product.ImageUrl;
-                }
+                updatedProduct.Images = product.Images;
             }
         }
 

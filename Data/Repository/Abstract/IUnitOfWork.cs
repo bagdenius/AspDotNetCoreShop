@@ -9,6 +9,7 @@
         IUserRepository User { get; }
         IOrderRepository Order { get; }
         IOrderItemRepository OrderItem { get; }
+        IProductImageRepository ProductImage { get; }
         void Save();
     }
 }

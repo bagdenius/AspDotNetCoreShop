@@ -28,7 +28,7 @@ namespace MVCProject.Areas.Customer.Controllers
 
         public IActionResult Details(string productId)
         {
-            if (ModelState.IsValid && productId != Guid.Empty.ToString())
+            if (ModelState.IsValid && productId != null)
             {
                 CartItem item = new()
                 {

@@ -118,7 +118,6 @@ namespace MVCProject.Areas.Admin.Controllers
         {
             OrderVM.Order = _unitOfWork.Order.Get(o => o.Id == OrderVM.Order.Id, "User");
             OrderVM.Items = _unitOfWork.OrderItem.GetAll(i => i.OrderId == OrderVM.Order.Id, "Product");
-
             string domain = Request.Scheme + "://" + Request.Host.Value + "/"; ;
             var options = new SessionCreateOptions
             {
@@ -127,7 +126,6 @@ namespace MVCProject.Areas.Admin.Controllers
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment",
             };
-
             foreach (var item in OrderVM.Items)
             {
                 SessionLineItemOptions sessionLineItem = new()
@@ -145,7 +143,6 @@ namespace MVCProject.Areas.Admin.Controllers
                 };
                 options.LineItems.Add(sessionLineItem);
             }
-
             var service = new SessionService();
             Session session = service.Create(options);
             _unitOfWork.Order.UpdateStripePaymentId(OrderVM.Order.Id, session.Id, session.PaymentIntentId);

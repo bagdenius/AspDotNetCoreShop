@@ -7,7 +7,7 @@ namespace Models
     public class OrderItem
     {
         [Key]
-        public string Id { get; set; } = Guid.Empty.ToString();
+        public string Id { get; set; }
 
         [Required]
         public string OrderId { get; set; }
