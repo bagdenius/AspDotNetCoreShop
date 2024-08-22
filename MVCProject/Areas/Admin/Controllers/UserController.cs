@@ -1,9 +1,8 @@
-﻿using Data.Database;
+﻿using Data.Repository.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.ViewModels;
 using Utility;
@@ -14,12 +13,16 @@ namespace MVCProject.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin)]
     public class UserController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
-        public UserController(ApplicationDbContext db, UserManager<IdentityUser> userManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public UserController(IUnitOfWork unitOfWork,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -29,31 +32,29 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            string roleId = _db.UserRoles.FirstOrDefault(ur => ur.UserId == id).RoleId;
             UserVM userVM = new()
             {
-                User = _db.Users.Include(u => u.Company).FirstOrDefault(u => u.Id == id),
-                RoleList = _db.Roles.Select(r => new SelectListItem
+                User = _unitOfWork.User.Get(u => u.Id == id, "Company"),
+                RoleList = _roleManager.Roles.Select(r => new SelectListItem
                 {
                     Text = r.Name,
                     Value = r.Name
                 }),
-                CompanyList = _db.Companies.Select(c => new SelectListItem
+                CompanyList = _unitOfWork.Company.GetAll().Select(c => new SelectListItem
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
                 })
             };
-            userVM.User.Role = _db.Roles.FirstOrDefault(r => r.Id == roleId).Name;
+            userVM.User.Role = _userManager.GetRolesAsync(userVM.User).GetAwaiter().GetResult().FirstOrDefault();
             return View(userVM);
         }
 
         [HttpPost]
         public IActionResult Edit(UserVM userVM)
         {
-            User user = _db.Users.FirstOrDefault(u => u.Id == userVM.User.Id);
-            string roleId = _db.UserRoles.FirstOrDefault(ur => ur.UserId == userVM.User.Id).RoleId;
-            string oldRole = _db.Roles.FirstOrDefault(r => r.Id == roleId).Name;
+            User user = _unitOfWork.User.Get(u => u.Id == userVM.User.Id);
+            string oldRole = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().FirstOrDefault();
             user.Name = userVM.User.Name;
             user.Surname = userVM.User.Surname;
             user.Country = userVM.User.Country;
@@ -71,8 +72,8 @@ namespace MVCProject.Areas.Admin.Controllers
             {
                 user.CompanyId = null;
             }
-            _db.Users.Update(user);
-            _db.SaveChanges();
+            _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
             _userManager.RemoveFromRoleAsync(user, oldRole).GetAwaiter().GetResult();
             _userManager.AddToRoleAsync(user, userVM.User.Role).GetAwaiter().GetResult();
             return RedirectToAction(nameof(Index));
@@ -83,13 +84,10 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<User> users = _db.Users.Include(u => u.Company).ToList();
-            IEnumerable<IdentityUserRole<string>> userRoles = _db.UserRoles.ToList();
-            IEnumerable<IdentityRole> roles = _db.Roles.ToList();
+            IEnumerable<User> users = _unitOfWork.User.GetAll(includeProperties: "Company").ToList();
             foreach (var user in users)
             {
-                string roleId = userRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId;
-                user.Role = roles.FirstOrDefault(r => r.Id == roleId).Name;
+                user.Role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().FirstOrDefault();
             }
             return Json(new { data = users });
         }
@@ -97,7 +95,7 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult LockUnlock([FromBody] string id)
         {
-            User user = _db.Users.Find(id);
+            User user = _unitOfWork.User.Get(id);
             if (user == null)
             {
                 return Json(new { success = false, message = "Error while locking/unlocking the user" });
@@ -110,21 +108,21 @@ namespace MVCProject.Areas.Admin.Controllers
             {
                 user.LockoutEnd = DateTime.Now.AddYears(1000);
             }
-            _db.Users.Update(user);
-            _db.SaveChanges();
+            _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
             return Json(new { success = true, message = "User locked/unlocked successfully" });
         }
 
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            User User = _db.Users.FirstOrDefault(u => u.Id == id);
+            User User = _unitOfWork.User.Get(id);
             if (User == null)
             {
                 return Json(new { success = false, message = "Error while deleting user" });
             }
-            _db.Users.Remove(User);
-            _db.SaveChanges();
+            _unitOfWork.User.Remove(User);
+            _unitOfWork.Save();
             return Json(new { success = true, message = "User deleted successfully" });
         }
 
