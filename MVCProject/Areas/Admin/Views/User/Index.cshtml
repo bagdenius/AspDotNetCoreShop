@@ -1,18 +1,16 @@
-﻿@model IEnumerable<Company>
-
-<div class="card shadow border-0 mt-4">
+﻿<div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Company List</h2>
+                <h2 class="text-white py-2">User List</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <div class="row pb-3">
             <div class="col-12 text-end">
-                <a asp-controller="Company" asp-action="Upsert" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Create New Company
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New User
                 </a>
             </div>
         </div>
@@ -21,12 +19,11 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Phone</th>                    
-                    <th>Country</th>
-                    <th>State</th>
-                    <th>City</th>
-                    <th>Address</th>
-                    <th>Postal Code</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Company</th>
                     <th>Manage</th>
                 </tr>
             </thead>
@@ -34,6 +31,6 @@
     </div>
 </div>
 
-@section Scripts{
-    <script src="~/js/company.js"></script>
+@section Scripts {
+    <script src="~/js/user.js"></script>
 }

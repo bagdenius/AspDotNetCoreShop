@@ -1,0 +1,103 @@
+﻿@model UserVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="col-12 text-center">
+            <h2 class="text-white py-2">Edit user</h2>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form class="row" method="post">
+            <input asp-for="User.Id" hidden />
+
+            <div class="form-floating mb-3 col-md-6">
+                <input readonly asp-for="User.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="username" />
+                <label asp-for="User.UserName" class="ms-2 text-muted"></label>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input readonly asp-for="User.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="User.Email" class="ms-2 text-muted"></label>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.Name" class="form-control" autocomplete="name" aria-required="true" placeholder="name" />
+                <label asp-for="User.Name" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.Surname" class="form-control" autocomplete="surname" aria-required="true" placeholder="surname" />
+                <label asp-for="User.Surname" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.Country" class="form-control" autocomplete="country" aria-required="true" placeholder="country" />
+                <label asp-for="User.Country" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.Country" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.State" class="form-control" autocomplete="state" aria-required="true" placeholder="state" />
+                <label asp-for="User.State" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.State" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.City" class="form-control" autocomplete="city" aria-required="true" placeholder="city" />
+                <label asp-for="User.City" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.City" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.Address" class="form-control" autocomplete="address" aria-required="true" placeholder="address" />
+                <label asp-for="User.Address" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.Address" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.PostalCode" class="form-control" autocomplete="postal code" aria-required="true" placeholder="postal code" />
+                <label asp-for="User.PostalCode" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <input asp-for="User.PhoneNumber" class="form-control" autocomplete="phone number" aria-required="true" placeholder="phone number" />
+                <label asp-for="User.PhoneNumber" class="ms-2 text-muted"></label>
+                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3 col-md-6">
+                <select asp-for="User.Role" asp-items="Model.RoleList" class="form-select"></select>
+                <label asp-for="User.Role" class="ms-2"></label>
+            </div>
+            @{
+                string companySelectorVisibility = "display:none;";
+                if (Model.User.Role == SD.Role_Company)
+                {
+                    companySelectorVisibility = "display:block;";
+                }
+            }
+            <div id="User_Company" class="form-floating mb-3 col-md-6" style="@companySelectorVisibility">
+                <select asp-for="User.CompanyId" asp-items="Model.CompanyList" class="form-select"></select>
+                <label asp-for="User.CompanyId" class="ms-2"></label>
+            </div>
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-outline-primary border form-control">Back To List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function() {
+            $('#User_Role').change(function() {
+                var selection = $('#User_Role Option:Selected').text();
+                if (selection == '@SD.Role_Company') {
+                    $('#User_Company').show();
+                }
+                else {
+                    $('#User_Company').hide();
+                }
+            })
+        });
+    </script>
+}

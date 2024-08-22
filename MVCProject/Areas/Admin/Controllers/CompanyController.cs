@@ -79,11 +79,11 @@ namespace MVCProject.Areas.Admin.Controllers
                 Company company = _unitOfWork.Company.Get(id);
                 if (company == null)
                 {
-                    return Json(new { success = false, message = "Error while deleting" });
+                    return Json(new { success = false, message = "Error while deleting company" });
                 }
                 _unitOfWork.Company.Remove(company);
                 _unitOfWork.Save();
-                return Json(new { success = true, message = "Delete successful" });
+                return Json(new { success = true, message = "Company deleted successfully" });
             }
             return NotFound();
         }

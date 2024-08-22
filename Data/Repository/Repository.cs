@@ -49,7 +49,7 @@ namespace Data.Repository
                     query = query.Include(property);
                 }
             }
-            return query.ToList();
+            return query;
         }
 
         public void Remove(T entity)
