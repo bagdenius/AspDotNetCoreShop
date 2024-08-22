@@ -104,7 +104,17 @@
                                 @foreach (var item in Model.Items)
                                 {
                                     <li class="list-group-item d-flex justify-content-between">
-                                        <div>
+                                        <div class="col-2">
+                                            @if (item.Product.Images != null && item.Product.Images.Count() > 0)
+                                            {
+                                                <img src="@item.Product.Images.FirstOrDefault().Url" class="card-img-top rounded" />
+                                            }
+                                            else
+                                            {
+                                                <img src="https://placehold.co/200x240/png" class="card-img-top rounded" />
+                                            }
+                                        </div>
+                                        <div class="col-8">
                                             <h6 class="my-0">@item.Product.Title</h6>
                                             <small class="text-muted">Quantity: @item.Count</small>
                                         </div>

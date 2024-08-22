@@ -31,11 +31,13 @@ namespace MVCProject.Areas.Customer.Controllers
             string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             cart = new()
             {
-                Items = _unitOfWork.CartItem.GetAll(ci => ci.UserId == userId, "Product"),
+                Items = _unitOfWork.CartItem.GetAll(i => i.UserId == userId, "Product").ToList(),
                 Order = new()
             };
+            IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
             foreach (var item in cart.Items)
             {
+                item.Product.Images = productImages.Where(i => i.ProductId == item.Product.Id).ToList();
                 item.Price = GetPriceBasedOnQuantity(item);
                 cart.Order.Total += item.Price * item.Count;
             }
@@ -48,12 +50,17 @@ namespace MVCProject.Areas.Customer.Controllers
             string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             cart = new()
             {
-                Items = _unitOfWork.CartItem.GetAll(i => i.UserId == userId, "Product")
+                Items = _unitOfWork.CartItem.GetAll(i => i.UserId == userId, "Product").ToList()
             };
             cart.Order = new()
             {
                 User = _unitOfWork.User.Get(userId),
             };
+            IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
+            foreach (var item in cart.Items)
+            {
+                item.Product.Images = productImages.Where(i => i.ProductId == item.Product.Id).ToList();
+            }
             cart.Order.Name = cart.Order.User.Name;
             cart.Order.Surname = cart.Order.User.Surname;
             cart.Order.PhoneNumber = cart.Order.User.PhoneNumber;
@@ -170,45 +177,36 @@ namespace MVCProject.Areas.Customer.Controllers
 
         public IActionResult IncrementItemCount(string itemId)
         {
-            if (ModelState.IsValid)
-            {
-                CartItem item = _unitOfWork.CartItem.Get(itemId);
-                item.Count++;
-                _unitOfWork.CartItem.Update(item);
-                _unitOfWork.Save();
-            }
+            CartItem item = _unitOfWork.CartItem.Get(itemId);
+            item.Count++;
+            _unitOfWork.CartItem.Update(item);
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult DecrementItemCount(string itemId)
         {
-            if (ModelState.IsValid)
+            CartItem item = _unitOfWork.CartItem.Get(itemId);
+            if (item.Count <= 1)
             {
-                CartItem item = _unitOfWork.CartItem.Get(itemId);
-                if (item.Count <= 1)
-                {
-                    HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
-                    _unitOfWork.CartItem.Remove(item);
-                }
-                else
-                {
-                    item.Count--;
-                    _unitOfWork.CartItem.Update(item);
-                }
-                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
+                _unitOfWork.CartItem.Remove(item);
             }
+            else
+            {
+                item.Count--;
+                _unitOfWork.CartItem.Update(item);
+            }
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult RemoveItem(string itemId)
         {
-            if (ModelState.IsValid)
-            {
-                CartItem item = _unitOfWork.CartItem.Get(itemId);
-                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
-                _unitOfWork.CartItem.Remove(item);
-                _unitOfWork.Save();
-            }
+            CartItem item = _unitOfWork.CartItem.Get(itemId);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == item.UserId).Count() - 1);
+            _unitOfWork.CartItem.Remove(item);
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 

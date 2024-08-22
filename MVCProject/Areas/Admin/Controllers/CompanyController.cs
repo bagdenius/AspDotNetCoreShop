@@ -55,29 +55,21 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            if (ModelState.IsValid)
-            {
-                IEnumerable<Company> companies = _unitOfWork.Company.GetAll();
-                return Json(new { data = companies });
-            }
-            return NotFound();
+            IEnumerable<Company> companies = _unitOfWork.Company.GetAll();
+            return Json(new { data = companies });
         }
 
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != null)
+            Company company = _unitOfWork.Company.Get(id);
+            if (company == null)
             {
-                Company company = _unitOfWork.Company.Get(id);
-                if (company == null)
-                {
-                    return Json(new { success = false, message = "Error while deleting company" });
-                }
-                _unitOfWork.Company.Remove(company);
-                _unitOfWork.Save();
-                return Json(new { success = true, message = "Company deleted successfully" });
+                return Json(new { success = false, message = "Error while deleting company" });
             }
-            return NotFound();
+            _unitOfWork.Company.Remove(company);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Company deleted successfully" });
         }
 
         #endregion

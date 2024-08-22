@@ -30,25 +30,21 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Upsert(string? id)
         {
-            if (ModelState.IsValid)
+            ProductVM productVM = new()
             {
-                ProductVM productVM = new()
-                {
-                    Product = new Product(),
-                    CategoryList = _unitOfWork.Category.GetAll()
-                        .Select(c => new SelectListItem
-                        {
-                            Text = c.Name,
-                            Value = c.Id.ToString()
-                        })
-                };
-                if (id != null)
-                {
-                    productVM.Product = _unitOfWork.Product.Get(id, "Images");
-                }
-                return View(productVM);
+                Product = new Product(),
+                CategoryList = _unitOfWork.Category.GetAll()
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+            };
+            if (id != null)
+            {
+                productVM.Product = _unitOfWork.Product.Get(id, "Images");
             }
-            return NotFound();
+            return View(productVM);
         }
 
         [HttpPost]
@@ -130,30 +126,26 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != null)
+            Product product = _unitOfWork.Product.Get(id);
+            if (product == null)
             {
-                Product product = _unitOfWork.Product.Get(id);
-                if (product == null)
-                {
-                    return Json(new { success = false, message = "Error while deleting" });
-                }
-
-                string productPath = @"images\products\product-" + id;
-                string fullProductPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
-                if (Directory.Exists(fullProductPath))
-                {
-                    string[] filePaths = Directory.GetFiles(fullProductPath);
-                    foreach (string filePath in filePaths)
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                    Directory.Delete(fullProductPath);
-                }
-                _unitOfWork.Product.Remove(product);
-                _unitOfWork.Save();
-                return Json(new { success = true, message = "Product deleted successfully" });
+                return Json(new { success = false, message = "Error while deleting" });
             }
-            return NotFound();
+
+            string productPath = @"images\products\product-" + id;
+            string fullProductPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+            if (Directory.Exists(fullProductPath))
+            {
+                string[] filePaths = Directory.GetFiles(fullProductPath);
+                foreach (string filePath in filePaths)
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                Directory.Delete(fullProductPath);
+            }
+            _unitOfWork.Product.Remove(product);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Product deleted successfully" });
         }
 
         #endregion

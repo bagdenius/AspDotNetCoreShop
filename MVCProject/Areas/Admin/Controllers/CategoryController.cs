@@ -43,49 +43,33 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (ModelState.IsValid && id != null)
-            {
-                Category category = _unitOfWork.Category.Get(id);
-                return View(category);
-            }
-            return NotFound();
+            Category category = _unitOfWork.Category.Get(id);
+            return View(category);
         }
 
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            if (ModelState.IsValid && category.Id != null)
-            {
-                _unitOfWork.Category.Update(category);
-                _unitOfWork.Category.Save();
-                TempData["success"] = "Category updated successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            return View();
+            _unitOfWork.Category.Update(category);
+            _unitOfWork.Category.Save();
+            TempData["success"] = "Category updated successfully";
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != null)
-            {   
-                Category category = _unitOfWork.Category.Get(id);
-                return View(category);
-            }
-            return NotFound();
+            Category category = _unitOfWork.Category.Get(id);
+            return View(category);
         }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(string id)
         {
-            if (ModelState.IsValid && id != null)
-            {
-                Category category = _unitOfWork.Category.Get(id);
-                _unitOfWork.Category.Remove(category);
-                _unitOfWork.Save();
-                TempData["success"] = "Category deleted successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            return NotFound();
+            Category category = _unitOfWork.Category.Get(id);
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Save();
+            TempData["success"] = "Category deleted successfully";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -29,27 +29,23 @@ namespace MVCProject.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (ModelState.IsValid)
+            string roleId = _db.UserRoles.FirstOrDefault(ur => ur.UserId == id).RoleId;
+            UserVM userVM = new()
             {
-                string roleId = _db.UserRoles.FirstOrDefault(ur => ur.UserId == id).RoleId;
-                UserVM userVM = new()
+                User = _db.Users.Include(u => u.Company).FirstOrDefault(u => u.Id == id),
+                RoleList = _db.Roles.Select(r => new SelectListItem
                 {
-                    User = _db.Users.Include(u => u.Company).FirstOrDefault(u => u.Id == id),
-                    RoleList = _db.Roles.Select(r => new SelectListItem
-                    {
-                        Text = r.Name,
-                        Value = r.Name
-                    }),
-                    CompanyList = _db.Companies.Select(c => new SelectListItem
-                    {
-                        Text = c.Name,
-                        Value = c.Id.ToString()
-                    })
-                };
-                userVM.User.Role = _db.Roles.FirstOrDefault(r => r.Id == roleId).Name;
-                return View(userVM);
-            }
-            return BadRequest();
+                    Text = r.Name,
+                    Value = r.Name
+                }),
+                CompanyList = _db.Companies.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })
+            };
+            userVM.User.Role = _db.Roles.FirstOrDefault(r => r.Id == roleId).Name;
+            return View(userVM);
         }
 
         [HttpPost]
@@ -87,61 +83,49 @@ namespace MVCProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            if (ModelState.IsValid)
+            IEnumerable<User> users = _db.Users.Include(u => u.Company).ToList();
+            IEnumerable<IdentityUserRole<string>> userRoles = _db.UserRoles.ToList();
+            IEnumerable<IdentityRole> roles = _db.Roles.ToList();
+            foreach (var user in users)
             {
-                IEnumerable<User> users = _db.Users.Include(u => u.Company).ToList();
-                IEnumerable<IdentityUserRole<string>> userRoles = _db.UserRoles.ToList();
-                IEnumerable<IdentityRole> roles = _db.Roles.ToList();
-                foreach (var user in users)
-                {
-                    string roleId = userRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId;
-                    user.Role = roles.FirstOrDefault(r => r.Id == roleId).Name;
-                }
-                return Json(new { data = users });
+                string roleId = userRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId;
+                user.Role = roles.FirstOrDefault(r => r.Id == roleId).Name;
             }
-            return NotFound();
+            return Json(new { data = users });
         }
 
         [HttpPost]
         public IActionResult LockUnlock([FromBody] string id)
         {
-            if (ModelState.IsValid)
+            User user = _db.Users.Find(id);
+            if (user == null)
             {
-                User user = _db.Users.Find(id);
-                if (user == null)
-                {
-                    return Json(new { success = false, message = "Error while locking/unlocking the user" });
-                }
-                if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
-                {
-                    user.LockoutEnd = null;
-                }
-                else
-                {
-                    user.LockoutEnd = DateTime.Now.AddYears(1000);
-                }
-                _db.Users.Update(user);
-                _db.SaveChanges();
-                return Json(new { success = true, message = "User locked/unlocked successfully" });
+                return Json(new { success = false, message = "Error while locking/unlocking the user" });
             }
-            return NotFound();
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+            {
+                user.LockoutEnd = null;
+            }
+            else
+            {
+                user.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+            _db.Users.Update(user);
+            _db.SaveChanges();
+            return Json(new { success = true, message = "User locked/unlocked successfully" });
         }
 
         [HttpDelete]
         public IActionResult Delete(string id)
         {
-            if (ModelState.IsValid && id != null)
+            User User = _db.Users.FirstOrDefault(u => u.Id == id);
+            if (User == null)
             {
-                User User = _db.Users.FirstOrDefault(u => u.Id == id);
-                if (User == null)
-                {
-                    return Json(new { success = false, message = "Error while deleting user" });
-                }
-                _db.Users.Remove(User);
-                _db.SaveChanges();
-                return Json(new { success = true, message = "User deleted successfully" });
+                return Json(new { success = false, message = "Error while deleting user" });
             }
-            return NotFound();
+            _db.Users.Remove(User);
+            _db.SaveChanges();
+            return Json(new { success = true, message = "User deleted successfully" });
         }
 
         #endregion

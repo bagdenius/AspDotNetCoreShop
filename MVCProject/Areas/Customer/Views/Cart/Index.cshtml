@@ -15,7 +15,7 @@
             </div>
             <div class="row mb-3 pb-3">
                 <div class="col-md-2 offset-md-1">
-                    <a class="btn btn-outline-primary text-uppercase mb-5 btn-sm" asp-controller="Home" asp-action="Index"><small>Continue Shopping</small></a>
+                    <a class="btn btn-outline-primary text-uppercase mb-3 btn-sm" asp-controller="Home" asp-action="Index"><small>Continue Shopping</small></a>
                 </div>
                 @if (Model.Items.Count() == 0)
                 {
@@ -28,7 +28,14 @@
                     {
                         <div class="row border-bottom py-3">
                             <div class="d-none d-lg-block col-lg-1 text-center py-2">
-                                @* <img src="@item.Product.ImageUrl" class="rounded" width="100%" /> *@
+                                @if (item.Product.Images != null && item.Product.Images.Count() > 0)
+                                {
+                                    <img src="@item.Product.Images.FirstOrDefault().Url" class="card-img-top rounded" />
+                                }
+                                else
+                                {
+                                    <img src="https://placehold.co/200x240/png" class="card-img-top rounded" />
+                                }
                             </div>
                             <div class="col-12 col-lg-6 pt-md-3">
                                 <h5 class="text-uppercase text-secondary"><strong>@item.Product.Title</strong></h5>

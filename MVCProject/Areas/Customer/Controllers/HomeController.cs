@@ -22,51 +22,43 @@ namespace MVCProject.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category,Images");
             return View(products);
         }
 
         public IActionResult Details(string productId)
         {
-            if (ModelState.IsValid && productId != null)
+            CartItem item = new()
             {
-                CartItem item = new()
-                {
-                    Product = _unitOfWork.Product.Get(productId, "Category"),
-                    Count = 1,
-                    ProductId = productId
-                };
-                return View(item);
-            }
-            return NotFound();
+                Product = _unitOfWork.Product.Get(productId, "Category,Images"),
+                Count = 1,
+                ProductId = productId
+            };
+            return View(item);
         }
 
         [HttpPost, Authorize]
         public IActionResult Details(CartItem item)
         {
-            if (ModelState.IsValid)
+            ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+            string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            item.UserId = userId;
+            CartItem duplicateItem = _unitOfWork.CartItem.Get(i => i.UserId == userId && i.ProductId == item.ProductId);
+            if (duplicateItem != null)
             {
-                ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
-                string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                item.UserId = userId;
-                CartItem duplicateItem = _unitOfWork.CartItem.Get(i => i.UserId == userId && i.ProductId == item.ProductId);
-                if (duplicateItem != null)
-                {
-                    duplicateItem.Count += item.Count;
-                    _unitOfWork.CartItem.Update(duplicateItem);
-                    TempData["success"] = "Product was updated in cart";
-                }
-                else
-                {
-                    item.Id = Guid.NewGuid().ToString();
-                    _unitOfWork.CartItem.Add(item);
-                    TempData["success"] = "Product was added to cart";
-                }
-                _unitOfWork.Save();
-                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == userId).Count());
-                return RedirectToAction(nameof(Index));
+                duplicateItem.Count += item.Count;
+                _unitOfWork.CartItem.Update(duplicateItem);
+                TempData["success"] = "Product was updated in cart";
             }
-            return NotFound();
+            else
+            {
+                item.Id = Guid.NewGuid().ToString();
+                _unitOfWork.CartItem.Add(item);
+                TempData["success"] = "Product was added to cart";
+            }
+            _unitOfWork.Save();
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.CartItem.GetAll(i => i.UserId == userId).Count());
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
